@@ -4,7 +4,6 @@ import { useAuth } from "@/app/context/auth";
 import axiosInstance from "@/app/hooks/axiosinstance";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import axiosInstance from "../../../hooks/axiosinstance";
 
 const UpdateProduct = (props) => {
   const router = useRouter();
