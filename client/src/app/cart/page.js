@@ -79,13 +79,13 @@ const CartPage = () => {
         {
           headers: {
             Authorization: `Bearer ${auth?.token}`,
-            "Content-Type": "application/json",
           },
         }
       );
 
       if (res.data.success) {
         clearCart();
+        fetchCart();
       }
       setFlash({
         message: "Order Placed",

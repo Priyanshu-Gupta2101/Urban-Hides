@@ -2,6 +2,7 @@
 import Button from "@/app/components/button";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/app/context/auth";
+import axiosInstance from "../../hooks/axiosinstance";
 
 const ManageCategory = () => {
   const [categoryName, setCategoryName] = useState("");
@@ -12,18 +13,19 @@ const ManageCategory = () => {
   const createCategory = async (categoryName) => {
     setLoading(true);
     try {
-      const response = await fetch(
-        "http://127.0.0.1:8080/api/v1/category/create-category",
+      const { data } = await axiosInstance.post(
+        "/api/v1/category/create-category",
         {
-          method: "POST",
           headers: {
-            "Content-Type": "application/json",
             Authorization: `Bearer ${auth.token}`,
           },
-          body: JSON.stringify({ name: categoryName }),
+        },
+        {
+          name: categoryName,
         }
       );
-      const data = await response.json();
+
+      console.log(data);
       setCategoryName("");
       fetchCategories();
       setLoading(false);
@@ -35,18 +37,17 @@ const ManageCategory = () => {
 
   const updateCategory = async (categoryName, id) => {
     try {
-      const repsonse = await fetch(
-        `http://127.0.0.1:8080/api/v1/category/update-category/${id}`,
+      const { data } = await axiosInstance.put(
+        `/api/v1/category/update-category/${id}`,
         {
-          method: "PUT",
           headers: {
-            "Content-Type": "application/json",
             Authorization: `Bearer ${auth.token}`,
           },
-          body: JSON.stringify({ name: categoryName }),
+        },
+        {
+          name: categoryName,
         }
       );
-      const data = await repsonse.json();
       console.log(data);
     } catch (err) {
       console.log(err);
@@ -56,17 +57,14 @@ const ManageCategory = () => {
   const deleteCategory = async (id) => {
     setLoading(true);
     try {
-      const response = await fetch(
-        `http://127.0.0.1:8080/api/v1/category/delete-category/${id}`,
+      const { data } = await axiosInstance.delete(
+        `/api/v1/category/delete-category/${id}`,
         {
-          method: "DELETE",
           headers: {
-            "Content-Type": "application/json",
             Authorization: `Bearer ${auth.token}`,
           },
         }
       );
-      const data = await response.json();
       console.log(data);
       fetchCategories();
       setLoading(false);
@@ -77,10 +75,7 @@ const ManageCategory = () => {
 
   const fetchCategories = async () => {
     try {
-      const response = await fetch(
-        "http://127.0.0.1:8080/api/v1/category/get-category"
-      );
-      const data = await response.json();
+      const { data } = await axiosInstance.get("/api/v1/category/get-category");
       console.log(data.category);
       setCategories(data.category);
     } catch (err) {

@@ -3,6 +3,7 @@ import Button from "@/app/components/button";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/app/context/auth";
 import { useRouter } from "next/navigation";
+import axiosInstance from "./../../hooks/axiosinstance";
 
 const CreateProduct = () => {
   const router = useRouter();
@@ -38,10 +39,9 @@ const CreateProduct = () => {
 
   const fetchCategories = async () => {
     try {
-      const response = await fetch(
+      const { data } = await axiosInstance.get(
         "http://127.0.0.1:8080/api/v1/category/get-category"
       );
-      const data = await response.json();
       setCategories(data.category);
     } catch (err) {
       console.log(err);
@@ -70,14 +70,15 @@ const CreateProduct = () => {
     formData.append("subcategory", subcategory);
 
     try {
-      const response = await fetch(
+      const response = await axiosInstance.post(
         "http://127.0.0.1:8080/api/v1/product/create-product",
         {
-          method: "POST",
           headers: {
             Authorization: `Bearer ${auth.token}`,
           },
-          body: formData,
+        },
+        {
+          formData,
         }
       );
       const data = await response.json();

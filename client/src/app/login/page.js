@@ -3,6 +3,7 @@ import Button from "../components/button";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../context/auth";
+import axiosInstance from "../hooks/axiosinstance";
 const Login = (props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -11,17 +12,12 @@ const Login = (props) => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-
+    //fetch
     try {
-      const res = await fetch("http://127.0.0.1:8080/api/v1/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
+      const { data } = await axiosInstance.post("/api/v1/auth/login", {
+        email,
+        password,
       });
-      const data = await res.json();
-
       console.log(data);
 
       if (data && data.success) {

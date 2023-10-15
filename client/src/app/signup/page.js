@@ -1,6 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 import Button from "../components/button";
+import axiosInstance from "./../hooks/axiosinstance";
 import { useState } from "react";
 
 const Signup = (props) => {
@@ -11,26 +12,17 @@ const Signup = (props) => {
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const [answer, setAnswer] = useState("");
-
+  //fetch
   const register = async () => {
     try {
-      const response = await fetch(
-        "http://127.0.0.1:8080/api/v1/auth/register",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name: name,
-            email: email,
-            password: password,
-            phone: phone,
-            address: address,
-            answer: answer,
-          }),
-        }
-      );
+      const response = await axiosInstance.post("/api/v1/auth/register", {
+        name: name,
+        email: email,
+        password: password,
+        phone: phone,
+        address: address,
+        answer: answer,
+      });
       const data = await response.json();
       console.log(data);
       router.push("/login");

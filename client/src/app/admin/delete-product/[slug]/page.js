@@ -22,9 +22,7 @@ const UpdateProduct = (props) => {
 
   const fetchCategories = async () => {
     try {
-      const response = await fetch(
-        "http://127.0.0.1:8080/api/v1/category/get-category"
-      );
+      const response = await axiosInstance.get("/api/v1/category/get-category");
       const data = await response.json();
       console.log(data.category);
       setCategories(data.category);
@@ -63,10 +61,9 @@ const UpdateProduct = (props) => {
 
     try {
       console.log(auth?.token);
-      const response = await fetch(
+      const response = await axiosInstance.delete(
         `http://127.0.0.1:8080/api/v1/product/delete-product/${id}`,
         {
-          method: "DELETE",
           headers: {
             Authorization: `Bearer ${auth.token}`,
           },

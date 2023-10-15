@@ -301,7 +301,6 @@ const Navbar = () => {
         const res = await axiosInstance.get("api/v1/product/cart-count", {
           headers: {
             Authorization: `Bearer ${auth?.token}`,
-            "Content-Type": "application/json",
           },
         });
         setCartCount(res.data.itemCount);
