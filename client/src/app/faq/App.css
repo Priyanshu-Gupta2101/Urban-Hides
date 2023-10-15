@@ -1,0 +1,14 @@
+
+
+/* custom scroll bar */
+::-webkit-scrollbar {
+    width: 6px;
+}
+::-webkit-scrollbar-track {
+    background-color: #333;
+    border-radius: 15px;
+}
+::-webkit-scrollbar-thumb {
+    background-image: linear-gradient(-45deg, #333, #6a5af9, #d66efd);
+    border-radius: 100rem;
+}
