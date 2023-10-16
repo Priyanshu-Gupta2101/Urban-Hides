@@ -15,7 +15,7 @@ const Signup = (props) => {
   //fetch
   const register = async () => {
     try {
-      const response = await axiosInstance.post("/api/v1/auth/register", {
+      const { data } = await axiosInstance.post("/api/v1/auth/register", {
         name: name,
         email: email,
         password: password,
@@ -23,7 +23,6 @@ const Signup = (props) => {
         address: address,
         answer: answer,
       });
-      const data = await response.json();
       console.log(data);
       router.push("/login");
     } catch (error) {

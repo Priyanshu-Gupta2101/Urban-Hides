@@ -42,36 +42,24 @@ const navigation = {
           name: "Clothing",
           items: [
             {
-              name: "Tops",
-              href: `/collections?category=Female&subcategory=Tops`,
+              name: "Skirts",
+              href: `/collections?category=Female&subcategory=Skirts`,
             },
             {
               name: "Dresses",
               href: `/collections?category=Female&subcategory=Dresses`,
             },
             {
-              name: "Pants",
-              href: `/collections?category=Female&subcategory=Pants`,
+              name: "Coats",
+              href: `/collections?category=Female&subcategory=Coats`,
             },
             {
-              name: "Denim",
-              href: `/collections?category=Female&subcategory=Denim`,
-            },
-            {
-              name: "Sweaters",
-              href: `/collections?category=Female&subcategory=Sweaters`,
-            },
-            {
-              name: "T-Shirts",
-              href: `/collections?category=Female&subcategory=T-Shirts`,
+              name: "Blazer",
+              href: `/collections?category=Female&subcategory=Blazer`,
             },
             {
               name: "Jackets",
               href: `/collections?category=Female&subcategory=Jackets`,
-            },
-            {
-              name: "Activewear",
-              href: `/collections?category=Female&subcategory=Activewear`,
             },
           ],
         },
@@ -104,10 +92,6 @@ const navigation = {
           name: "Clothing",
           items: [
             {
-              name: "Tops",
-              href: `/collections?category=Male&subcategory=Tops`,
-            },
-            {
               name: "Pants",
               href: `/collections?category=Male&subcategory=Pants`,
             },
@@ -121,7 +105,7 @@ const navigation = {
             },
             {
               name: "Jackets",
-              href: `/collections?category=Male&subcategory=Jacket`,
+              href: `/collections?category=Male&subcategory=Jackets`,
             },
             {
               name: "Activewear",
@@ -129,18 +113,6 @@ const navigation = {
             },
           ],
         },
-        // {
-        //   id: "accessories",
-        //   name: "Accessories",
-        //   items: [
-        //     { name: "Watches", href: "#" },
-        //     { name: "Wallets", href: "#" },
-        //     { name: "Bags", href: "#" },
-        //     { name: "Sunglasses", href: "#" },
-        //     { name: "Hats", href: "#" },
-        //     { name: "Belts", href: "#" },
-        //   ],
-        // },
       ],
     },
     {
@@ -170,10 +142,6 @@ const navigation = {
           name: "Clothing",
           items: [
             {
-              name: "Tops",
-              href: `/collections?category=Kids&subcategory=Tops`,
-            },
-            {
               name: "Pants",
               href: `/collections?category=Kids&subcategory=Pants`,
             },
@@ -195,18 +163,6 @@ const navigation = {
             },
           ],
         },
-        // {
-        //   id: "accessories",
-        //   name: "Accessories",
-        //   items: [
-        //     { name: "Watches", href: "#" },
-        //     { name: "Wallets", href: "#" },
-        //     { name: "Bags", href: "#" },
-        //     { name: "Sunglasses", href: "#" },
-        //     { name: "Hats", href: "#" },
-        //     { name: "Belts", href: "#" },
-        //   ],
-        // },
       ],
     },
     {
@@ -236,28 +192,16 @@ const navigation = {
           name: "Accessory",
           items: [
             {
-              name: "Tops",
-              href: `/collections?category=Accessories&subcategory=Tops`,
+              name: "Wallet",
+              href: `/collections?category=Accessories&subcategory=Wallet`,
             },
             {
-              name: "Pants",
-              href: `/collections?category=Accessories&subcategory=Pants`,
+              name: "Pillow",
+              href: `/collections?category=Accessories&subcategory=Pillow`,
             },
             {
-              name: "Sweaters",
-              href: `/collections?category=Accessories&subcategory=Sweaters`,
-            },
-            {
-              name: "T-Shirts",
-              href: `/collections?category=Accessories&subcategory=T-Shirts`,
-            },
-            {
-              name: "Jackets",
-              href: `/collections?category=Accessories&subcategory=Jackets`,
-            },
-            {
-              name: "Activewear",
-              href: `/collections?category=Accessories&subcategory=Activewear`,
+              name: "Handbages",
+              href: `/collections?category=Accessories&subcategory=Handbages`,
             },
           ],
         },

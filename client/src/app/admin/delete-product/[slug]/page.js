@@ -22,7 +22,9 @@ const UpdateProduct = (props) => {
 
   const fetchCategories = async () => {
     try {
-      const response = await axiosInstance.get("/api/v1/category/get-category");
+      const response = await fetch(
+        "https://urban-hides.vercel.app/api/v1/category/get-category"
+      );
       const data = await response.json();
       console.log(data.category);
       setCategories(data.category);
@@ -45,7 +47,7 @@ const UpdateProduct = (props) => {
       setCategory(data.data.product.category._id);
       setCategoryName(data.data.product.category.name);
       setID(data.data.product._id);
-      setPhoto(data.data.product.photo);
+      setPhoto(data.data.product.photo[0].url);
     } catch (err) {
       console.log(err);
     }
@@ -61,9 +63,10 @@ const UpdateProduct = (props) => {
 
     try {
       console.log(auth?.token);
-      const response = await axiosInstance.delete(
-        `http://127.0.0.1:8080/api/v1/product/delete-product/${id}`,
+      const response = await fetch(
+        `https://urban-hides.vercel.app/api/v1/product/delete-product/${id}`,
         {
+          method: "DELETE",
           headers: {
             Authorization: `Bearer ${auth.token}`,
           },
@@ -98,9 +101,7 @@ const UpdateProduct = (props) => {
         <p className="text-2xl">Quantity: {quantity}</p>
         <p className="text-2xl">Shipping: {shipping ? `Yes` : `No`}</p>
         <div>
-          <img
-            src={`http://localhost:8080/api/v1/product/product-photo/${id}`}
-          />
+          <img src={photo} />
         </div>
         <Button
           value="Confirm Delete Product"

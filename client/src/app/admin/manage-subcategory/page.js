@@ -2,7 +2,6 @@
 import Button from "@/app/components/button";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/app/context/auth";
-import axiosInstance from "../../hooks/axiosinstance";
 
 const ManageSubCategory = () => {
   const [category, setCategory] = useState("");
@@ -16,15 +15,18 @@ const ManageSubCategory = () => {
     setLoading(true);
     try {
       console.log(category);
-      const { data } = await axiosInstance.post(
-        "/api/v1/subcategory/create",
+      const response = await fetch(
+        "https://urban-hides.vercel.app/api/v1/subcategory/create",
         {
+          method: "POST",
           headers: {
+            "Content-Type": "application/json",
             Authorization: `Bearer ${auth.token}`,
           },
-        },
-        { categoryId: category, name: subcategory }
+          body: JSON.stringify({ categoryId: category, name: subcategory }),
+        }
       );
+      const data = await response.json();
       setSubcategory("");
       setCategory("");
       fetchCategories();
@@ -37,17 +39,18 @@ const ManageSubCategory = () => {
 
   const updateSubCategory = async (categoryName, id) => {
     try {
-      const { data } = await axiosInstance.put(
-        `/api/v1/subcategory/update/${id}`,
+      const repsonse = await fetch(
+        `https://urban-hides.vercel.app/api/v1/subcategory/update/${id}`,
         {
+          method: "PUT",
           headers: {
+            "Content-Type": "application/json",
             Authorization: `Bearer ${auth.token}`,
           },
-        },
-        {
-          name: categoryName,
+          body: JSON.stringify({ name: categoryName }),
         }
       );
+      const data = await repsonse.json();
       console.log(data);
     } catch (err) {
       console.log(err);
@@ -58,18 +61,18 @@ const ManageSubCategory = () => {
     setLoading(true);
     console.log(cid);
     try {
-      const { data } = await axiosInstance.delete(
-        `/api/v1/subcategory/delete/`,
+      const response = await fetch(
+        `https://urban-hides.vercel.app/api/v1/subcategory/delete/`,
         {
+          method: "DELETE",
           headers: {
+            "Content-Type": "application/json",
             Authorization: `Bearer ${auth.token}`,
           },
-        },
-        {
-          categoryId: cid,
-          subcategoryId: subid,
+          body: JSON.stringify({ categoryId: cid, subcategoryId: subid }),
         }
       );
+      const data = await response.json();
       console.log(data);
       fetchCategories();
       setLoading(false);
@@ -80,7 +83,10 @@ const ManageSubCategory = () => {
 
   const fetchCategories = async () => {
     try {
-      const { data } = await axiosInstance.get("/api/v1/category/get-category");
+      const response = await fetch(
+        "https://urban-hides.vercel.app/api/v1/category/get-category"
+      );
+      const data = await response.json();
       console.log(data.category);
       setCategories(data.category);
     } catch (err) {

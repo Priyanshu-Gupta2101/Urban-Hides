@@ -16,12 +16,49 @@ const UpdateProduct = (props) => {
   const [price, setPrice] = useState("");
   const [quantity, setQuantity] = useState("");
   const [shipping, setShipping] = useState(1);
-  const [photo, setPhoto] = useState(null);
+  const [front, setFrontImages] = useState(null);
+  const [back, setBackImages] = useState(null);
   const [auth, setAuth] = useAuth();
+  const [selectedSizes, setSelectedSizes] = useState([]);
+  const [selectedColors, setSelectedColors] = useState([]);
+
+  const [newSize, setNewSize] = useState("");
+
+  // Function to add a new size to the list
+  const addSize = () => {
+    if (newSize.trim() !== "") {
+      setSelectedSizes([...selectedSizes, newSize]);
+      setNewSize("");
+    }
+  };
+
+  const [newColor, setNewColor] = useState("");
+
+  // Function to add a new color to the list
+  const addColor = () => {
+    if (newColor.trim() !== "") {
+      setSelectedColors([...selectedColors, newColor]);
+      setNewColor("");
+    }
+  };
+
+  // Initialize state to store the list of features
+  const [features, setFeatures] = useState([]);
+  const [newFeature, setNewFeature] = useState("");
+
+  // Function to add a new feature to the list
+  const addFeature = () => {
+    if (newFeature.trim() !== "") {
+      setFeatures([...features, newFeature]);
+      setNewFeature("");
+    }
+  };
 
   const fetchCategories = async () => {
     try {
-      const response = await axiosInstance.get("/api/v1/category/get-category");
+      const response = await fetch(
+        "https://urban-hides.vercel.app/api/v1/category/get-category"
+      );
       const data = await response.json();
       console.log(data.category);
       setCategories(data.category);
@@ -43,6 +80,8 @@ const UpdateProduct = (props) => {
       setShipping(data.data.product.shipping);
       setCategory(data.data.product.category._id);
       setID(data.data.product._id);
+      setFrontImages(data.data.product.photo[0].url);
+      setBackImages(data.data.product.photo[1].url);
     } catch (err) {
       console.log(err);
     }
@@ -53,9 +92,22 @@ const UpdateProduct = (props) => {
     fetchProduct(props.params.slug);
   }, []);
 
-  const handleFileChange = (evt) => {
+  const handleFrontChange = (evt) => {
     if (evt.target.files) {
-      setPhoto(evt.target.files[0]);
+      const reader = new FileReader();
+      reader.readAsDataURL(evt.target.files[0]);
+      reader.onloadend = () => {
+        setFrontImages(reader.result);
+      };
+    }
+  };
+  const handleBackChange = (evt) => {
+    if (evt.target.files) {
+      const reader = new FileReader();
+      reader.readAsDataURL(evt.target.files[0]);
+      reader.onloadend = () => {
+        setBackImages(reader.result);
+      };
     }
   };
 
@@ -69,19 +121,22 @@ const UpdateProduct = (props) => {
     formData.append("price", price);
     formData.append("quantity", quantity);
     formData.append("shipping", shipping);
-    if (photo) formData.append("photo", photo, photo.name);
+    formData.append("front", front);
+    formData.append("back", back);
+    formData.append("size", Array.from(selectedSizes));
+    formData.append("color", Array.from(selectedColors));
+    formData.append("features", Array.from(features));
 
     try {
       console.log(auth?.token);
-      const response = await axiosInstance.put(
-        `http://127.0.0.1:8080/api/v1/product/update-product/${id}`,
+      const response = await fetch(
+        `https://urban-hides.vercel.app/api/v1/product/update-product/${id}`,
         {
+          method: "PUT",
           headers: {
             Authorization: `Bearer ${auth.token}`,
           },
-        },
-        {
-          formData,
+          body: formData,
         }
       );
       const data = await response.json();
@@ -143,8 +198,23 @@ const UpdateProduct = (props) => {
           onChange={(e) => setPrice(e.target.value)}
         />
         <br />
-        <label>Update image of product </label>
-        <input type="file" onChange={handleFileChange} />
+        <br />
+        <label>Add front image of product </label>
+        <input
+          type="file"
+          accept="image/*"
+          value={front}
+          onChange={handleFrontChange}
+        />
+        <br />
+        <label>Add back image of product </label>
+        <input
+          type="file"
+          accept="image/*"
+          value={back}
+          onChange={handleBackChange}
+        />
+        <br />
         <br />
         <input
           type="number"
@@ -161,6 +231,94 @@ const UpdateProduct = (props) => {
           <option value="1">Yes</option>
           <option value="0">No</option>
         </select>
+        <br />
+        <div>
+          <label>
+            Enter a size:
+            <br />
+            <input
+              type="text"
+              className="p-1 my-7 border-2 border-slate-400"
+              name="size"
+              placeholder="Small.."
+              onChange={(e) => setNewSize(e.target.value)}
+            />
+          </label>
+          <br />
+          <button type="button" onClick={addSize}>
+            Add
+          </button>
+        </div>
+        <div>
+          <button type="button" onClick={() => setSelectedSizes([])}>
+            Clear All
+          </button>
+        </div>
+        <div>
+          <strong>Selected Sizes:</strong>
+          <ul>
+            {selectedSizes.map((size, index) => (
+              <li key={index}>{size}</li>
+            ))}
+          </ul>
+        </div>
+        <br />
+
+        <div>
+          <label>
+            Enter a color:
+            <br />
+            <input
+              type="text"
+              className="p-1 my-7 border-2 border-slate-400"
+              name="color"
+              placeholder="Black, ..."
+              onChange={(e) => setNewColor(e.target.value)}
+            />
+          </label>
+          <br />
+          <button type="button" onClick={addColor}>
+            Add
+          </button>
+        </div>
+        <div>
+          <button type="button" onClick={() => setSelectedColors([])}>
+            Clear All
+          </button>
+        </div>
+        <div>
+          <strong>Selected Colors:</strong>
+          <ul>
+            {selectedColors.map((color, index) => (
+              <li key={index}>{color}</li>
+            ))}
+          </ul>
+        </div>
+        <br />
+
+        <div>
+          <h3>Product Features</h3>
+          <label>
+            Enter a feature:
+            <br />
+            <input
+              type="text"
+              className="p-1 my-7 border-2 border-slate-400"
+              name="feature"
+              value={newFeature}
+              onChange={(e) => setNewFeature(e.target.value)}
+            />
+          </label>
+          <br />
+          <button type="button" onClick={addFeature}>
+            Add
+          </button>
+        </div>
+        <ul>
+          {features.map((feature, index) => (
+            <li key={index}>{feature}</li>
+          ))}
+        </ul>
         <br />
         <Button value="Update product" bg="bg-black" color="text-white" />
       </form>

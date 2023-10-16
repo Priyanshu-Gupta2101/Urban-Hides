@@ -15,16 +15,14 @@ export default function ContactForm() {
     const subject = String(event.target.subject.value);
     const message = String(event.target.message.value);
 
-    const response = await axiosInstance.post("/api/v1/contact", {
+    const { data } = await axiosInstance.post("/api/v1/contact", {
       name,
       email,
       subject,
       message,
     });
 
-    console.log(response);
-
-    if (response.data.success) {
+    if (data.success) {
       console.log("Message sent successfully");
       setLoading(false);
       // reset the form

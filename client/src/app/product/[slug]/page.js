@@ -98,10 +98,10 @@ const Product = () => {
 
   const fetchReviews = async () => {
     try {
-      const response = await axiosInstance.get(
+      const { data } = await axiosInstance.get(
         `/api/v1/review/getAllReviews?productId=${product._id}`
       );
-      setReviews(response.data);
+      setReviews(data);
     } catch (error) {
       console.error("Error fetching reviews:", error);
     }
