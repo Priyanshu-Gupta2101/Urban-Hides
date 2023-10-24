@@ -13,9 +13,6 @@ const SearchBar = () => {
       const { data } = await axiosInstance.get(
         `/api/v1/product/search/${values.keyword}`
       );
-      console.log(data);
-      console.log("________________________________________________________");
-      console.log(values);
       setValues({ ...values, results: data });
       router.push(`/search/${values.keyword}`);
     } catch (error) {

@@ -3,6 +3,8 @@ import { useRouter } from "next/navigation";
 import Button from "../components/button";
 import axiosInstance from "./../hooks/axiosinstance";
 import { useState } from "react";
+import Flash from "@/app/components/flash";
+import showFlash from "@/app/utils/showFlash";
 
 const Signup = (props) => {
   const router = useRouter();
@@ -12,6 +14,10 @@ const Signup = (props) => {
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const [answer, setAnswer] = useState("");
+  const [flash, setFlash] = useState({
+    message: "",
+    bg: "",
+  });
   //fetch
   const register = async () => {
     try {
@@ -23,7 +29,12 @@ const Signup = (props) => {
         address: address,
         answer: answer,
       });
-      console.log(data);
+      if (data.success == false) {
+        setFlash({
+          message: data.msg,
+          bg: "bg-red-500",
+        });
+      }
       router.push("/login");
     } catch (error) {
       console.error(error);
@@ -58,14 +69,14 @@ const Signup = (props) => {
         />
         <input
           className="p-1 my-4 border-2 border-slate-400"
-          type="number"
-          placeholder="Phone no."
+          type="tel"
+          placeholder="Contactable Phone no."
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
         />
         <textarea
           className="p-1 my-4 border-2 border-slate-400"
-          placeholder="Address"
+          placeholder="Shipping Address"
           defaultValue={address}
           onChange={(e) => setAddress(e.target.value)}
         ></textarea>
@@ -74,7 +85,16 @@ const Signup = (props) => {
           type="password"
           placeholder="Password"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={(e) => {
+            if (e.target.value.length < 6) {
+              setFlash({
+                message: "Password must be 6 characters long",
+                bg: "bg-red-500",
+              });
+            } else {
+              setPassword(e.target.value);
+            }
+          }}
         />
         <label className="my-2">
           Enter an answer that you will use in case you want to reset your

@@ -57,10 +57,9 @@ const UpdateProduct = (props) => {
   const fetchCategories = async () => {
     try {
       const response = await fetch(
-        "https://urban-hides.vercel.app/api/v1/category/get-category"
+        `${process.env.NEXT_PUBLIC_API_PATH}api/v1/category/get-category`
       );
       const data = await response.json();
-      console.log(data.category);
       setCategories(data.category);
     } catch (err) {
       console.log(err);
@@ -72,7 +71,6 @@ const UpdateProduct = (props) => {
       const data = await axiosInstance.get(
         `/api/v1/product/get-product/${slug}`
       );
-      console.log(data.data.product);
       setName(data.data.product.name);
       setDescription(data.data.product.description);
       setPrice(data.data.product.price);
@@ -112,7 +110,6 @@ const UpdateProduct = (props) => {
   };
 
   const updateProduct = async (id) => {
-    console.log(id);
     const formData = new FormData();
 
     formData.append("category", category);
@@ -128,9 +125,8 @@ const UpdateProduct = (props) => {
     formData.append("features", Array.from(features));
 
     try {
-      console.log(auth?.token);
       const response = await fetch(
-        `https://urban-hides.vercel.app/api/v1/product/update-product/${id}`,
+        `${process.env.NEXT_PUBLIC_API_PATH}api/v1/product/update-product/${id}`,
         {
           method: "PUT",
           headers: {
@@ -140,7 +136,7 @@ const UpdateProduct = (props) => {
         }
       );
       const data = await response.json();
-      console.log(data);
+
       router.push("/admin/products");
     } catch (err) {
       console.error(err);

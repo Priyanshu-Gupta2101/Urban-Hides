@@ -13,7 +13,7 @@ const ManageCategory = () => {
     setLoading(true);
     try {
       const response = await fetch(
-        "https://urban-hides.vercel.app/api/v1/category/create-category",
+        `${process.env.NEXT_PUBLIC_API_PATH}api/v1/category/create-category`,
         {
           method: "POST",
           headers: {
@@ -27,7 +27,6 @@ const ManageCategory = () => {
       setCategoryName("");
       fetchCategories();
       setLoading(false);
-      console.log(data);
     } catch (error) {
       console.log(error);
     }
@@ -36,7 +35,7 @@ const ManageCategory = () => {
   const updateCategory = async (categoryName, id) => {
     try {
       const repsonse = await fetch(
-        `https://urban-hides.vercel.app/api/v1/category/update-category/${id}`,
+        `${process.env.NEXT_PUBLIC_API_PATH}api/v1/category/update-category/${id}`,
         {
           method: "PUT",
           headers: {
@@ -47,7 +46,6 @@ const ManageCategory = () => {
         }
       );
       const data = await repsonse.json();
-      console.log(data);
     } catch (err) {
       console.log(err);
     }
@@ -57,7 +55,7 @@ const ManageCategory = () => {
     setLoading(true);
     try {
       const response = await fetch(
-        `https://urban-hides.vercel.app/api/v1/category/delete-category/${id}`,
+        `${process.env.NEXT_PUBLIC_API_PATH}api/v1/category/delete-category/${id}`,
         {
           method: "DELETE",
           headers: {
@@ -67,7 +65,7 @@ const ManageCategory = () => {
         }
       );
       const data = await response.json();
-      console.log(data);
+
       fetchCategories();
       setLoading(false);
     } catch (err) {
@@ -78,10 +76,10 @@ const ManageCategory = () => {
   const fetchCategories = async () => {
     try {
       const response = await fetch(
-        "https://urban-hides.vercel.app/api/v1/category/get-category"
+        `${process.env.NEXT_PUBLIC_API_PATH}api/v1/category/get-category`
       );
       const data = await response.json();
-      console.log(data.category);
+
       setCategories(data.category);
     } catch (err) {
       console.log(err);

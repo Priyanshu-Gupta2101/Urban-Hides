@@ -2,7 +2,7 @@ import Spinner from "../components/spinner";
 
 const LoadingProducts = (props) => {
   return (
-    <div className="flex items-center justify-center h-screen fixed top-0">
+    <div className="flex items-center justify-center h-screen">
       <Spinner />
     </div>
   );

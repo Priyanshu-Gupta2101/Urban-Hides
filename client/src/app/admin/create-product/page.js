@@ -39,7 +39,7 @@ const CreateProduct = () => {
   const fetchCategories = async () => {
     try {
       const response = await fetch(
-        "https://urban-hides.vercel.app/api/v1/category/get-category"
+        `${process.env.NEXT_PUBLIC_API_PATH}api/v1/category/get-category`
       );
       const data = await response.json();
       setCategories(data.category);
@@ -71,7 +71,7 @@ const CreateProduct = () => {
 
     try {
       const response = await fetch(
-        "https://urban-hides.vercel.app/api/v1/product/create-product",
+        `${process.env.NEXT_PUBLIC_API_PATH}api/v1/product/create-product`,
         {
           method: "POST",
           headers: {
@@ -81,7 +81,6 @@ const CreateProduct = () => {
         }
       );
       const data = await response.json();
-      console.log(data);
       router.push("/admin/products");
     } catch (err) {
       console.error(err);

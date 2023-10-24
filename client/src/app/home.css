@@ -55,10 +55,6 @@
   padding: 1rem;
 }
 
-#best-seller img {
-  border-radius: 5px;
-}
-
 .best-seller {
   margin-top: 1rem;
   margin-bottom: 1rem;
@@ -73,22 +69,6 @@
 .best-seller div:hover {
   transform: scale(1.02);
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-}
-
-.best-seller h6 {
-  /* font-family: "Montserrat", sans-serif; */
-  font-size: 1.1rem;
-  padding: 0.5rem;
-  padding-bottom: 0rem;
-  font-weight: 400;
-}
-
-.best-seller h5 {
-  /* font-family: "Montserrat", sans-serif; */
-  font-weight: bold;
-  font-size: 1.1rem;
-  padding: 0.5rem;
-  padding-top: 0rem;
 }
 
 .single-of-three h4 {

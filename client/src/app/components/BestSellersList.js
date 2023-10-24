@@ -19,7 +19,7 @@ export const BestSellersList = () => {
     <>
       {products.map((product) => (
         <Product
-          image={`${product.photo[0].url}`}
+          image={`${product.photo[0].public_id}`}
           key={product._id}
           {...product}
         />

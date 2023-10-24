@@ -1,5 +1,6 @@
 "use client";
 import Button from "../components/button";
+import { useCart } from "../context/cart";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../context/auth";
@@ -9,6 +10,7 @@ const Login = (props) => {
   const [password, setPassword] = useState("");
   const router = useRouter();
   const [auth, setAuth] = useAuth();
+  const [cart, setCart] = useCart();
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -18,7 +20,6 @@ const Login = (props) => {
         email,
         password,
       });
-      console.log(data);
 
       if (data && data.success) {
         setAuth({
@@ -27,13 +28,25 @@ const Login = (props) => {
           token: data["token"],
         });
 
+        getCartItem(data);
         localStorage.setItem("auth", JSON.stringify(data));
       }
-
-      router.push("/");
-      console.log(auth);
     } catch (error) {
       console.error(error);
+    } finally {
+      router.push("/");
+    }
+  };
+
+  const getCartItem = async (resdata) => {
+    if (resdata && resdata.success) {
+      const { data } = await axiosInstance.get("/api/v1/product/get-cart", {
+        headers: {
+          Authorization: `Bearer ${resdata.token}`,
+        },
+      });
+      setCart(data?.cart);
+      localStorage.setItem("cart", JSON.stringify(data?.cart));
     }
   };
 

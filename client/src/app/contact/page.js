@@ -39,35 +39,34 @@ export default function ContactForm() {
   return (
     <div className="my-12 pt-10 flex flex-col items-center gap-3">
       <h1 className="text-2xl font-semibold">Contact Us</h1>
-      <div className="mx-auto max-w-3xl px-6 py-4 my-10 md:flex">
+      <div className="mx-auto min-w-3xl px-6 py-4 my-10 md:flex">
         {/* Contact Details (Left Side) */}
-        <div className="md:w-1/2 pr-4 px-4">
+        <div className="w-1/2 pr-4 px-4">
           <p className="text-lg mt-2">
-            Email:{" "}
             <a href="mailto:sales@urbanhides.com">
               <AiOutlineMail /> sales@urbanhides.com
             </a>
           </p>
           <div className="flex items-center mt-2">
             <div className="mr-2">
-              <AiOutlinePhone size={24} />{" "}
+              <AiOutlinePhone size={20} />{" "}
               {/* Use react-icons for phone icon */}
             </div>
             <p className="text-lg">International: +1 323 284 6307</p>
           </div>
           <div className="flex items-center mt-2">
             <div className="mr-2">
-              <AiOutlinePhone size={24} />{" "}
+              <AiOutlinePhone size={20} />{" "}
               {/* Use react-icons for phone icon */}
             </div>
             <p className="text-lg">India: +91 123 456 7890</p>
           </div>
         </div>
 
-        <div className="hidden md:block w-1/2"></div>
-        <div className="hidden md:block w-1/2"></div>
-        <div className="hidden md:block w-1/2"></div>
-        <div className="hidden md:block w-1/2"></div>
+        <div className="hidden md:block w-1/6"></div>
+        <div className="hidden md:block w-1/6"></div>
+        <div className="hidden md:block w-1/6"></div>
+        <div className="hidden md:block w-1/6"></div>
 
         {/* Contact Form (Right Side) */}
         <form onSubmit={handleSubmit} className="px-4 md:w-1/2 mt-4 md:mt-0">

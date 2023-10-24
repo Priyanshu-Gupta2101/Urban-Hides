@@ -42,7 +42,6 @@ export default function Products() {
       );
       setLoading(false);
       setProducts(data.products);
-      console.log(data);
     } catch (error) {
       setLoading(false);
       console.log(error);
@@ -163,7 +162,11 @@ export default function Products() {
           >
             {products?.map((p) => (
               <div className="container bg-white p-2" key={p._id}>
-                <img className="img-fluid" src={p.photo[0].url} alt={p.name} />
+                <img
+                  className="img-fluid"
+                  src={`${process.env.NEXT_PUBLIC_CLOUDINARY_PATH}/${p.photo[0].public_id}.jpg`}
+                  alt={p.name}
+                />
                 <h6>{p.name}</h6>
                 <h5>
                   {p.price.toLocaleString("en-US", {

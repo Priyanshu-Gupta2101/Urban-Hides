@@ -23,10 +23,9 @@ const UpdateProduct = (props) => {
   const fetchCategories = async () => {
     try {
       const response = await fetch(
-        "https://urban-hides.vercel.app/api/v1/category/get-category"
+        `${process.env.NEXT_PUBLIC_API_PATH}api/v1/category/get-category`
       );
       const data = await response.json();
-      console.log(data.category);
       setCategories(data.category);
     } catch (err) {
       console.log(err);
@@ -38,7 +37,6 @@ const UpdateProduct = (props) => {
       const data = await axiosInstance.get(
         `/api/v1/product/get-product/${slug}`
       );
-      console.log(data.data.product);
       setName(data.data.product.name);
       setDescription(data.data.product.description);
       setPrice(data.data.product.price);
@@ -62,9 +60,8 @@ const UpdateProduct = (props) => {
     const formData = new FormData();
 
     try {
-      console.log(auth?.token);
       const response = await fetch(
-        `https://urban-hides.vercel.app/api/v1/product/delete-product/${id}`,
+        `${process.env.NEXT_PUBLIC_API_PATH}api/v1/product/delete-product/${id}`,
         {
           method: "DELETE",
           headers: {
@@ -73,7 +70,7 @@ const UpdateProduct = (props) => {
         }
       );
       const data = await response.json();
-      console.log(data);
+
       router.push("/admin/products");
     } catch (err) {
       console.error(err);

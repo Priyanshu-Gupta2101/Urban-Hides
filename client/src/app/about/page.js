@@ -4,9 +4,9 @@ const page = () => {
   return (
     <div>
       <div className={` flex justify-center items-center p-12`}>
-        <h2 className="text-3xl  text-black-500">About Us</h2>
+        <h2 className="text-4xl font-bold text-black-500">About Us</h2>
       </div>
-      <div className=" flex justify-center p-10">
+      <div className=" flex justify-center p-7">
         <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md justify-center">
           <h1 class="text-3xl font-bold text-black-600 mb-7">
             Welcome to UrbanHides: Your Destination for High-Quality Leather

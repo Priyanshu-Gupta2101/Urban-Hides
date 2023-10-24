@@ -1,13 +1,15 @@
 "use client";
 
 //Components
+import { useState, useEffect } from "react";
 import { BestSellersList } from "./components/BestSellersList.js";
 import { BestThree } from "./components/BestThree.js";
 import EmblaCarousel from "./components/Carousel";
 import NewsLetter from "./components/Newsletter.jsx";
 import "./embla.css";
+import NewsletterModal from "./components/NewsletterModal.jsx";
 
-const OPTIONS = {};
+const OPTIONS = { loop: true };
 const SLIDE_COUNT = 4;
 const SLIDES = Array.from(Array(SLIDE_COUNT).keys());
 //Styles
@@ -15,6 +17,12 @@ import "./home.css";
 import CategoriesList from "./components/CategoriesList.js";
 
 export default function Home() {
+  const [modalVisible, setModalVisible] = useState(false);
+
+  // Use useEffect to show the modal on the initial load
+  useEffect(() => {
+    setModalVisible(true);
+  }, []);
   return (
     <>
       <section className="sandbox__carousel">
@@ -70,6 +78,9 @@ export default function Home() {
       <div className="h-20"></div>
 
       <NewsLetter />
+
+      {/* Show the NewsletterModal if isNewsletterModalOpen is true */}
+      {modalVisible && <NewsletterModal />}
     </>
   );
 }

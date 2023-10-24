@@ -5,6 +5,7 @@ import "../home.css";
 import axiosInstance from "../hooks/axiosinstance";
 import { Prices } from "../components/Prices";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export default function Products() {
   const router = useRouter();
@@ -24,7 +25,6 @@ export default function Products() {
   const getCategories = async () => {
     try {
       const { data } = await axiosInstance.get("/api/v1/category/get-category");
-      console.log(data.category);
       setCategories(data.category);
     } catch (error) {
       console.log(error);
@@ -44,7 +44,6 @@ export default function Products() {
       );
       setLoading(false);
       setProducts(data.products);
-      console.log(data);
     } catch (error) {
       setLoading(false);
       console.log(error);
@@ -108,6 +107,18 @@ export default function Products() {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const isNewProduct = (createdAt) => {
+    const currentDate = new Date();
+    const twoWeeksAgo = new Date(currentDate - 14 * 24 * 60 * 60 * 1000);
+    const createdAtDate = new Date(createdAt);
+    return createdAtDate >= twoWeeksAgo;
+  };
+
+  const calculateDiscountedPrice = (originalPrice) => {
+    const discountedPrice = originalPrice - (originalPrice * 20) / 100;
+    return discountedPrice;
   };
 
   useEffect(() => {
@@ -181,7 +192,7 @@ export default function Products() {
             id="best-seller-row"
           > */}
           <div
-            className={`grid gap-10 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 best-seller`}
+            className={`grid gap-10 grid-cols-1 md:grid-cols-2 lg:grid-cols-4`}
           >
             {products?.map((p) => (
               <div
@@ -191,18 +202,45 @@ export default function Products() {
                   router.push(`/product/${p.slug}`);
                 }}
               >
-                <img
-                  className="img-fluid cursor-pointer"
-                  src={p.photo[0].url}
-                  alt={p.name}
-                />
-                <h6>{p.name}</h6>
-                <h5>
-                  {p.price.toLocaleString("en-US", {
-                    style: "currency",
-                    currency: "USD",
-                  })}
-                </h5>
+                <div className="relative">
+                  {isNewProduct(p.createdAt) && (
+                    <span
+                      className="bg-[rgba(0,0,0,0)] text-black font-bold text-xs absolute top-2 left-2 px-1 py-1 rounded-full border border-black border-opacity-25 backdrop-blur-md"
+                      style={{ zIndex: 2 }}
+                    >
+                      New
+                    </span>
+                  )}
+                  <div className="best-seller">
+                    <div className="flex flex-col items-center">
+                      <img
+                        className="img-fluid cursor-pointer"
+                        src={`${process.env.NEXT_PUBLIC_CLOUDINARY_PATH}/${p.photo[0].public_id}.jpg`}
+                        fill="true"
+                        priority="true"
+                        sizes="max-width"
+                        alt={p.name}
+                      />
+                      <h6>{p.name}</h6>
+                      <span className="line-through text-gray-500">
+                        {p.price.toLocaleString("en-US", {
+                          style: "currency",
+                          currency: "USD",
+                        })}
+                      </span>
+                      <span className="text-red-500">
+                        {calculateDiscountedPrice(p.price).toLocaleString(
+                          "en-US",
+                          {
+                            style: "currency",
+                            currency: "USD",
+                          }
+                        )}{" "}
+                        (20% off)
+                      </span>
+                    </div>
+                  </div>
+                </div>
               </div>
             ))}
           </div>

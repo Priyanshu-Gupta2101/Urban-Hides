@@ -8,24 +8,36 @@ import { useAuth } from "@/app/context/auth";
 import Flash from "@/app/components/flash";
 import showFlash from "@/app/utils/showFlash";
 import "../../home.css";
+import SizeChart from "@/app/components/SizeChart";
 import ImageSlider from "@/app/components/ImageSlider";
+import Link from "next/link";
+import { useCart } from "@/app/context/cart";
 
 const Product = () => {
-  const [reviewText, setReviewText] = useState("");
-  const [reviews, setReviews] = useState([]);
+  const [cart, setCart] = useCart();
+  // const [reviewText, setReviewText] = useState("");
+  // const [reviews, setReviews] = useState([]);
   const [auth, setAuth] = useAuth();
   const router = useRouter();
   const params = useParams();
   const [quantity, setQuantity] = useState(1);
   const [product, setProduct] = useState({});
   const [relatedProducts, setRelatedProducts] = useState([]);
+  const [size, setSize] = useState("M");
+  const [color, setColor] = useState("");
   const [flash, setFlash] = useState({
     message: "",
     bg: "",
   });
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const [size, setSize] = useState("S");
-  const [color, setColor] = useState("");
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
   //getProduct
   const getProduct = async () => {
     try {
@@ -42,24 +54,33 @@ const Product = () => {
   // Add to cart
   const addToCart = async () => {
     try {
-      const { data } = await axiosInstance.post(
-        "/api/v1/product/add-to-cart",
-        {
-          product: product._id,
-          quantity: quantity,
-          size: size,
-          color: color,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${auth?.token}`,
+      if (auth.token) {
+        const { data } = await axiosInstance.post(
+          "/api/v1/product/add-to-cart",
+          {
+            product: product._id,
+            quantity: quantity,
+            size: size,
+            color: color,
           },
-        }
-      );
-      setFlash({
-        message: "Item added to cart",
-        bg: "bg-green-500",
-      });
+          {
+            headers: {
+              Authorization: `Bearer ${auth?.token}`,
+            },
+          }
+        );
+        setCart([...cart, product]);
+        localStorage.setItem("cart", JSON.stringify([...cart, product]));
+        setFlash({
+          message: "Item added to cart",
+          bg: "bg-green-500",
+        });
+      } else {
+        setFlash({
+          message: "Login to add to cart",
+          bg: "bg-blue-400",
+        });
+      }
     } catch (err) {
       console.log(err);
       setFlash({
@@ -67,9 +88,9 @@ const Product = () => {
           "Error! Item could not be added to cart. Please refresh the page and try again.",
         bg: "bg-red-500",
       });
+    } finally {
+      showFlash();
     }
-
-    showFlash();
   };
   //get similar product
   const getSimilarProduct = async (pid, cid) => {
@@ -85,36 +106,97 @@ const Product = () => {
 
   const createReview = async () => {
     try {
-      console.log(product._id);
-      await axiosInstance.post("/api/v1/review/create", {
-        product: product._id,
-        text: reviewText,
-      });
-      setReviewText(""); // Clear the review text input after posting
+      if (auth.token) {
+        await axiosInstance.post(
+          "/api/v1/review/create",
+          {
+            product: product._id,
+            text: reviewText,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${auth?.token}`,
+            },
+          }
+        );
+
+        setFlash({
+          message: "Created review successfully",
+          bg: "bg-green-400",
+        });
+      } else {
+        setFlash({
+          message: "Login is required",
+          bg: "bg-blue-400",
+        });
+      }
+      // Clear the review text input after posting
     } catch (error) {
       console.error("Error creating review:", error);
+    } finally {
+      showFlash();
+      setReviewText("");
     }
   };
 
-  const fetchReviews = async () => {
-    try {
-      const { data } = await axiosInstance.get(
-        `/api/v1/review/getAllReviews?productId=${product._id}`
-      );
-      setReviews(data);
-    } catch (error) {
-      console.error("Error fetching reviews:", error);
-    }
+  // const fetchReviews = async () => {
+  //   try {
+  //     const { data } = await axiosInstance.get(
+  //       `/api/v1/review/getAllReviews?productId=${product._id}`
+  //     );
+  //     console.log(data);
+  //     setReviews(data.docs);
+  //   } catch (error) {
+  //     console.error("Error fetching reviews:", error);
+  //   }
+  // };
+
+  const handleSizeSelect = (size) => {
+    setSize(size);
+    setFlash({
+      message: "Size selected",
+      bg: "bg-green-500",
+    });
+    showFlash();
+  };
+
+  const handleColorSelect = (color) => {
+    setColor(color);
+    setFlash({
+      message: "Color selected",
+      bg: "bg-green-500",
+    });
+    showFlash();
+  };
+
+  const calculateDiscountedPrice = (originalPrice) => {
+    const discountedPrice = originalPrice - (originalPrice * 20) / 100;
+    return discountedPrice;
+  };
+
+  const isNewProduct = (createdAt) => {
+    const currentDate = new Date();
+    const twoWeeksAgo = new Date(currentDate - 14 * 24 * 60 * 60 * 1000);
+    const createdAtDate = new Date(createdAt);
+    return createdAtDate >= twoWeeksAgo;
   };
 
   useEffect(() => {
-    if (params?.slug) getProduct();
-  }, [params?.slug]);
+    if (params?.slug && !product._id) {
+      getProduct();
+    }
+  }, [params?.slug, , product._id]);
+
+  // useEffect(() => {
+  //   if (product._id) {
+  //     fetchReviews();
+  //   }
+  // }, [product._id]);
 
   return (
-    <div className="max-w-full h-4/6 px-6 md:px-44 py-8">
+    <div className="mx-12 h-4/6 px-3 md:px-44 py-8">
       <Flash flash={flash} />
-      <div className="flex flex-wrap justify-evenly items-center">
+      <div className="flex flex-row items-center justify-evenly gap-20 ml-4">
         {product.photo?.length > 0 && (
           <ImageSlider
             props={product?.photo}
@@ -129,10 +211,23 @@ const Product = () => {
           <Star />
           <Star />
           <p className="text-3xl py-2">
-            {product.price?.toLocaleString("en-US", {
-              style: "currency",
-              currency: "USD",
-            })}
+            <span className="line-through text-gray-500">
+              {product.price?.toLocaleString("en-US", {
+                style: "currency",
+                currency: "USD",
+              })}
+            </span>
+            <br />
+            <span className="text-red-500">
+              {calculateDiscountedPrice(product.price)?.toLocaleString(
+                "en-US",
+                {
+                  style: "currency",
+                  currency: "USD",
+                }
+              )}{" "}
+              (20% off)
+            </span>
           </p>
 
           <p className="text-xl py-2">Category : {product?.category?.name}</p>
@@ -152,18 +247,13 @@ const Product = () => {
               return (
                 <button
                   key={p}
-                  className="bg-white text-black border-black border-2 rounded p-3.5 mr-2.5"
+                  className={`border-2 rounded p-3.5 mr-2.5 ${
+                    color === p
+                      ? "bg-black text-white border-white"
+                      : "bg-white text-black border-black"
+                  }`}
                   value={p}
-                  onClick={(e) => {
-                    console.log(e.target.value);
-                    setColor(e.target.value);
-                    setFlash({
-                      message: "Color selected",
-                      bg: "bg-green-500",
-                    });
-
-                    showFlash();
-                  }}
+                  onClick={() => handleColorSelect(p)}
                 >
                   {p}
                 </button>
@@ -172,27 +262,20 @@ const Product = () => {
           </div>
           <p className="text-2xl pt-2">Available sizes</p>
           <div className="sizes py-3.5">
-            {product.size?.map((p) => {
-              return (
-                <button
-                  key={p}
-                  value={p}
-                  className="bg-white text-black border-black  border-2 rounded p-3.5 mr-2.5"
-                  onClick={(e) => {
-                    setSize(e.target.value);
-                    setFlash({
-                      message: "Size selected",
-                      bg: "bg-green-500",
-                    });
-
-                    showFlash();
-                  }}
-                >
-                  {p}
-                </button>
-              );
-            })}
-
+            {product.size?.map((p) => (
+              <button
+                key={p}
+                value={p}
+                className={`p-3.5 mr-2.5 rounded border-2 ${
+                  size === p
+                    ? "bg-black text-white border-white"
+                    : "bg-white text-black border-black"
+                }`}
+                onClick={() => handleSizeSelect(p)}
+              >
+                {p}
+              </button>
+            ))}
             <button
               key="custom"
               value="Custom"
@@ -204,6 +287,35 @@ const Product = () => {
               Custom
             </button>
           </div>
+
+          <br />
+
+          <Link
+            className="text-blue-500 text-md hover:underline"
+            onClick={openModal}
+            href="/size-guide"
+          >
+            Checkout our Size Guide
+          </Link>
+
+          {/* {isModalOpen && (
+            <div className="fixed inset-0 flex items-center justify-center z-50">
+              <div
+                className="absolute inset-0 bg-gray-900 opacity-50"
+                onClick={closeModal}
+              ></div>
+              <div className="bg-white p-8 rounded-lg z-10 relative">
+                <button
+                  className="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
+                  onClick={closeModal}
+                >
+                  &times;
+                </button>
+                <SizeChart />
+              </div>
+            </div>
+          )} */}
+
           <br />
           <label htmlFor="quantity" className="text-2xl mr-4">
             Quantity
@@ -237,11 +349,10 @@ const Product = () => {
         </div>
       </div>
       <div className="md:py-32">
-        <p className="text-3xl">
+        {/* <p className="text-3xl">
           What people who bought this product have to say...
         </p>
-        {/* reviews */}
-        {reviews?.map((rev) => {
+        {reviews?.map((rev) => (
           <div
             id="reviews"
             className="grid grid-cols-1 md:grid-cols-2 gap-4 py-6"
@@ -260,13 +371,13 @@ const Product = () => {
                 <h4 className="m-2">John Doe</h4>
               </div>
               <div id="review-content" className="mt-2.5">
-                The quality is premium. Absolutely loved it. Great website too.
+                {rev.text}
               </div>
             </div>
-          </div>;
-        })}
+          </div>
+        ))}
         <form onSubmit={createReview} className="py-6 border-black">
-          <p>Post a review. Let us know how you liked the jacket!</p>
+          <p>Post a review. Let us know how you liked the leather product!</p>
           <textarea
             type="text"
             className="min-w-full border-slate-600 border-2 border-dotted rounded my-2"
@@ -275,7 +386,7 @@ const Product = () => {
             onChange={(e) => setReviewText(e.target.value)}
           ></textarea>
           <Button value="Post Review" bg="bg-green-500" color="black" />
-        </form>
+        </form> */}
 
         <hr />
         <div className="row container similar-products">
@@ -284,37 +395,55 @@ const Product = () => {
             <p className="text-center">No Similar Products found</p>
           )}
           <div
-            className={`grid gap-10 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 best-seller`}
+            className={`grid gap-10 grid-cols-1 md:grid-cols-2 lg:grid-cols-4`}
           >
             {relatedProducts?.map((p) => (
-              <div className="container bg-white p-2" key={p._id}>
-                <img className="img-fluid" src={p.photo[0].url} alt="p.name" />
-                <h6>{p.name}</h6>
-                <h5>
-                  {p.price.toLocaleString("en-US", {
-                    style: "currency",
-                    currency: "USD",
-                  })}
-                </h5>
-
-                <button
-                  className="inline-block align-center text-center"
-                  onClick={() => router.push(`/product/${p.slug}`)}
-                >
-                  More Details
-                </button>
-                <br />
-
-                <button
-                  className="btn btn-dark ms-1"
-                  onClick={() => {
-                    setCart([...cart, p]);
-                    localStorage.setItem("cart", JSON.stringify([...cart, p]));
-                    toast.success("Item Added to cart");
-                  }}
-                >
-                  ADD TO CART
-                </button>
+              <div
+                className="container bg-white p-2 border border-gray-400"
+                key={`product-${p._id}`}
+                onClick={() => {
+                  router.push(`/product/${p.slug}`);
+                }}
+              >
+                <div className="relative">
+                  {isNewProduct(p.createdAt) && (
+                    <span
+                      className="bg-[rgba(0,0,0,0)] text-black font-bold text-xs absolute top-2 left-2 px-1 py-1 rounded-full border border-black border-opacity-25 backdrop-blur-md"
+                      style={{ zIndex: 2 }}
+                    >
+                      New
+                    </span>
+                  )}
+                  <div className="best-seller">
+                    <div className="flex flex-col items-center">
+                      <img
+                        className="img-fluid cursor-pointer"
+                        src={`${process.env.NEXT_PUBLIC_CLOUDINARY_PATH}/${p.photo[0].public_id}.jpg`}
+                        fill="true"
+                        priority="true"
+                        sizes="(max-width: 300px)"
+                        alt={p.name}
+                      />
+                      <h6>{p.name}</h6>
+                      <span className="line-through text-gray-500">
+                        {p.price.toLocaleString("en-US", {
+                          style: "currency",
+                          currency: "USD",
+                        })}
+                      </span>
+                      <span className="text-red-500">
+                        {calculateDiscountedPrice(p.price).toLocaleString(
+                          "en-US",
+                          {
+                            style: "currency",
+                            currency: "USD",
+                          }
+                        )}{" "}
+                        (20% off)
+                      </span>
+                    </div>
+                  </div>
+                </div>
               </div>
             ))}
           </div>

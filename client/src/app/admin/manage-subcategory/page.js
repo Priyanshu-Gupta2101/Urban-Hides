@@ -14,9 +14,8 @@ const ManageSubCategory = () => {
   const createSubCategory = async (subcategory) => {
     setLoading(true);
     try {
-      console.log(category);
       const response = await fetch(
-        "https://urban-hides.vercel.app/api/v1/subcategory/create",
+        `${process.env.NEXT_PUBLIC_API_PATH}api/v1/subcategory/create`,
         {
           method: "POST",
           headers: {
@@ -31,7 +30,6 @@ const ManageSubCategory = () => {
       setCategory("");
       fetchCategories();
       setLoading(false);
-      console.log(data);
     } catch (error) {
       console.log(error);
     }
@@ -40,7 +38,7 @@ const ManageSubCategory = () => {
   const updateSubCategory = async (categoryName, id) => {
     try {
       const repsonse = await fetch(
-        `https://urban-hides.vercel.app/api/v1/subcategory/update/${id}`,
+        `${process.env.NEXT_PUBLIC_API_PATH}api/v1/subcategory/update/${id}`,
         {
           method: "PUT",
           headers: {
@@ -51,7 +49,6 @@ const ManageSubCategory = () => {
         }
       );
       const data = await repsonse.json();
-      console.log(data);
     } catch (err) {
       console.log(err);
     }
@@ -59,10 +56,10 @@ const ManageSubCategory = () => {
 
   const deleteSubCategory = async (cid, subid) => {
     setLoading(true);
-    console.log(cid);
+
     try {
       const response = await fetch(
-        `https://urban-hides.vercel.app/api/v1/subcategory/delete/`,
+        `${process.env.NEXT_PUBLIC_API_PATH}api/v1/subcategory/delete/`,
         {
           method: "DELETE",
           headers: {
@@ -73,7 +70,7 @@ const ManageSubCategory = () => {
         }
       );
       const data = await response.json();
-      console.log(data);
+
       fetchCategories();
       setLoading(false);
     } catch (err) {
@@ -84,10 +81,10 @@ const ManageSubCategory = () => {
   const fetchCategories = async () => {
     try {
       const response = await fetch(
-        "https://urban-hides.vercel.app/api/v1/category/get-category"
+        `${process.env.NEXT_PUBLIC_API_PATH}api/v1/category/get-category`
       );
       const data = await response.json();
-      console.log(data.category);
+
       setCategories(data.category);
     } catch (err) {
       console.log(err);

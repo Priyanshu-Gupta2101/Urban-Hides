@@ -22,7 +22,7 @@ export default function Products() {
 
       const category = params.get("category");
       const subcategory = params.get("subcategory");
-      console.log(category, subcategory);
+
       const { data } = await axiosInstance.post(
         `/api/v1/product/product-subcategory`,
         {
@@ -55,7 +55,7 @@ export default function Products() {
               >
                 <img
                   className="img-fluid cursor-pointer"
-                  src={p.photo[0].url}
+                  src={`${process.env.NEXT_PUBLIC_CLOUDINARY_PATH}/${p.photo[0].public_id}.jpg`}
                   alt={p.name}
                 />
                 <h6>{p.name}</h6>

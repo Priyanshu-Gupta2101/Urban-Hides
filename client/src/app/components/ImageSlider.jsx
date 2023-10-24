@@ -13,12 +13,9 @@ export default function ImageSlider({ props }) {
       return;
     }
 
-    // Find all the slides inside of the slider
     const slides = sliderCurrent.querySelectorAll("div");
     const slidesArray = Array.from(slides);
 
-    // Wait until a slide is 50% visible, then find it's index in the array of
-    // all slides and update the currentSlideIndex
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -39,8 +36,7 @@ export default function ImageSlider({ props }) {
   }, []);
 
   return (
-    <div>
-      {/* Slider */}
+    <div className="border border-gray-500 p-6">
       <div
         ref={sliderRef}
         className=" md:min-w-350 md:max-w-xs self-center flex flex-row overflow-x-scroll snap-x snap-mandatory"
@@ -50,7 +46,10 @@ export default function ImageSlider({ props }) {
       >
         {props.map((url) => {
           return (
-            <div key={url.url} className="w-full flex-shrink-0 snap-start">
+            <div
+              key={url.url}
+              className="w-full flex-shrink-0 snap-start border border-gray-300"
+            >
               <img src={url.url} />
             </div>
           );

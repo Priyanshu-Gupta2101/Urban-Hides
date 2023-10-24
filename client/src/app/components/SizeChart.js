@@ -8,14 +8,14 @@ function SizeChart() {
         Please provide Chest, Waist, Shoulder, and Sleeve Length. If you need
         help choosing your size.
       </p>
-      <div className="mx-auto mt-10">
-        <img src="./size.jpg" alt="Mens size Chart" />
+      <div className="mx-auto mt-10 flex flex-col items-center">
+        <img src="./size.jpg" width={500} height={600} alt="Mens size Chart" />
         <table
-          className="mx-auto"
+          className="mx-auto border border-solid border-black"
           style={{ margin: "20px auto", display: "block" }}
         >
           <tbody>
-            <tr className="h-11">
+            <tr className="h-11 border-b">
               <td className="w-[1000px]">
                 <strong>Size</strong>
               </td>
@@ -99,11 +99,11 @@ function SizeChart() {
       </div>
       <div className="mx-auto mt-7">
         <table
-          className="mx-auto"
+          className="mx-auto border border-solid border-black"
           style={{ margin: "20px auto", display: "block" }}
         >
           <tbody>
-            <tr className="h-11">
+            <tr className="h-11 border-b">
               <td className="w-[967.938px]">
                 <strong>Jacket Size</strong>
               </td>
@@ -127,9 +127,7 @@ function SizeChart() {
               </td>
             </tr>
             <tr className="h-11">
-              <td className="w-[967.938px]">
-                <strong>Bust</strong>
-              </td>
+              <td className="w-[967.938px]">Bust</td>
               <td className="w-[80.0625px]">35</td>
               <td className="w-[524px]">37</td>
               <td className="w-[524px]">39.5</td>
@@ -138,9 +136,7 @@ function SizeChart() {
               <td className="w-[524px]">47</td>
             </tr>
             <tr className="h-11">
-              <td className="w-[967.938px]">
-                <strong>Waist</strong>
-              </td>
+              <td className="w-[967.938px]">Waist</td>
               <td className="w-[80.0625px]">26</td>
               <td className="w-[524px]">28</td>
               <td className="w-[524px]">30.5</td>
@@ -149,9 +145,7 @@ function SizeChart() {
               <td className="w-[524px]">38</td>
             </tr>
             <tr className="h-11">
-              <td className="w-[967.938px]">
-                <strong>Hips</strong>
-              </td>
+              <td className="w-[967.938px]">Hips</td>
               <td className="w-[80.0625px]">37</td>
               <td className="w-[524px]">39</td>
               <td className="w-[524px]">41.5</td>
@@ -160,9 +154,7 @@ function SizeChart() {
               <td className="w-[524px]">49</td>
             </tr>
             <tr className="h-[55.941px]">
-              <td className="w-[967.938px]">
-                <strong>Shoulder</strong>
-              </td>
+              <td className="w-[967.938px]">Shoulder</td>
               <td className="w-[80.0625px]">15</td>
               <td className="w-[524px]">15.5</td>
               <td className="w-[524px]">16</td>
@@ -171,9 +163,7 @@ function SizeChart() {
               <td className="w-[524px]">18.5</td>
             </tr>
             <tr className="h-11">
-              <td className="w-[967.938px]">
-                <strong>Sleeve</strong>
-              </td>
+              <td className="w-[967.938px]">Sleeve</td>
               <td className="w-[80.0625px]">23.5</td>
               <td className="w-[524px]">23 3/4</td>
               <td className="w-[524px]">24</td>
@@ -182,9 +172,7 @@ function SizeChart() {
               <td className="w-[524px]">26</td>
             </tr>
             <tr className="h-11">
-              <td className="w-[967.938px]">
-                <strong>Sleeve Length (center of back)</strong>
-              </td>
+              <td className="w-[967.938px]">Sleeve Length (center of back)</td>
               <td className="w-[80.0625px]">30-31</td>
               <td className="w-[524px]">31-32</td>
               <td className="w-[524px]">32-33</td>

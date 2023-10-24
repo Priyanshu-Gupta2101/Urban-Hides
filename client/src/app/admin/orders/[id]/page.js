@@ -33,7 +33,6 @@ const Order = (props) => {
           },
         }
       );
-      console.log(data);
       setProducts(data.products);
       setBuyer({
         buyer: data.buyer,
@@ -61,7 +60,7 @@ const Order = (props) => {
           },
         }
       );
-      console.log(data);
+
       setFlash({ message: "Order status updated", bg: "bg-green-500" });
     } catch (err) {
       console.log(err);

@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 import { useSearch } from "../context/search";
 import axiosInstance from "@/app/hooks/axiosinstance";
 import { useCart } from "../context/cart";
+import Image from "next/image";
 
 const SearchInput = () => {
   const router = useRouter();
@@ -125,8 +126,10 @@ const SearchInput = () => {
                     >
                       <img
                         className="img-fluid"
-                        src={p.photo[0].url}
+                        src={`${process.env.NEXT_PUBLIC_CLOUDINARY_PATH}/${p.photo[0].public_id}.jpg`}
                         alt={p.name}
+                        width={200}
+                        height={300}
                       />
                       <h6>{p.name}</h6>
                       <h5>

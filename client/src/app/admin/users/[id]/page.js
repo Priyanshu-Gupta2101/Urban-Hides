@@ -14,7 +14,7 @@ const User = (props) => {
           Authorization: `Bearer ${auth?.token}`,
         },
       });
-      console.log(data);
+
       setUserDetails(data.user[0]);
     } catch (err) {
       console.log(err);

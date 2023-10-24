@@ -1,4 +1,5 @@
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 const Product = (props) => {
   const router = useRouter();
   return (
@@ -9,7 +10,11 @@ const Product = (props) => {
       }}
     >
       <div className="container bg-white p-2 px-6">
-        <img className="img-fluid" src={props.photo[0].url} alt={props.name} />
+        <img
+          className="img-fluid"
+          src={`${process.env.NEXT_PUBLIC_CLOUDINARY_PATH}/${props.image}.jpg`}
+          alt={props.name}
+        />
         <h6>{props.name}</h6>
         <h5>${props.price}</h5>
       </div>

@@ -12,6 +12,7 @@ import { useAuth } from "../context/auth";
 import useCategory from "../hooks/useCategory";
 import { useRouter } from "next/navigation";
 import axiosInstance from "../hooks/axiosinstance";
+import { useCart } from "../context/cart";
 
 const navigation = {
   categories: [
@@ -220,6 +221,7 @@ function classNames(...classes) {
 }
 
 const Navbar = () => {
+  const [cart, setCart] = useCart();
   const [cartCount, setCartCount] = useState(0);
   const [auth, setAuth] = useAuth();
   const [authorized, setAuthorized] = useState(false);
@@ -231,7 +233,9 @@ const Navbar = () => {
       user: null,
       token: "",
     });
+    setCart([]);
     localStorage.removeItem("auth");
+    localStorage.removeItem("cart");
     setAuthorized(false);
     router.push("/login");
   };
@@ -258,7 +262,7 @@ const Navbar = () => {
 
   useEffect(() => {
     getCartCount();
-  }, [auth]);
+  }, [cart]);
 
   return (
     <div className="bg-white">
@@ -439,9 +443,10 @@ const Navbar = () => {
       </Transition.Root>
 
       <header className="relative bg-white">
-        <p className="flex h-10 items-center justify-center bg-indigo-600 px-4 text-sm font-medium text-white sm:px-6 lg:px-8">
-          Get free delivery on orders over $100
-        </p>
+        <marquee className="flex h-10 items-center justify-center bg-indigo-600 px-4 text-sm font-medium text-white sm:px-6 lg:px-8">
+          Get free delivery on orders over $100 | 20% discount on all products |
+          Halloween season is here checkout our latest collections
+        </marquee>
 
         <nav
           aria-label="Top"
@@ -684,7 +689,7 @@ const Navbar = () => {
                       aria-hidden="true"
                     />
                     <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">
-                      {cartCount}
+                      {cartCount ? cartCount : 0}
                     </span>
                     <span className="sr-only">items in cart, view bag</span>
                   </Link>

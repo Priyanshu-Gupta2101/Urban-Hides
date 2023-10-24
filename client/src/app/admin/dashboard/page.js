@@ -19,8 +19,6 @@ const Dashboard = () => {
     router.push("/");
   };
 
-  console.log(auth);
-
   const checkAdmin = () => {
     if (!auth?.user?.role) {
       const timeoutId = setTimeout(redirectToPage, delay);
@@ -98,7 +96,7 @@ const Dashboard = () => {
             />
           </Link>
         )}
-        <Link href="/contact">
+        <Link href="/admin/support">
           <Card
             text="Support"
             color="bg-gradient-to-r from-red-400 via-yellow-400 to-green-400 to-blue-400"

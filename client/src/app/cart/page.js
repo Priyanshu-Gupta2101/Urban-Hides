@@ -7,30 +7,56 @@ import Button from "../components/button";
 import Spinner from "../components/spinner";
 import Flash from "@/app/components/flash";
 import showFlash from "@/app/utils/showFlash";
+import { useCart } from "../context/cart";
+import PayPalPayment from "../components/PayPalPayment";
 
 const CartPage = () => {
+  const [phone, setPhone] = useState();
+  const [address, setAddress] = useState();
   const [auth, setAuth] = useAuth();
-  const [carts, setCart] = useState([]);
+  const [cart, setCart] = useCart();
   const [loading, setLoading] = useState(true);
-  const router = useRouter();
-  const discount = 0;
+  const [change, setChange] = useState(false);
+  const discount = 20;
   const [flash, setFlash] = useState({
     message: "",
     bg: "",
   });
 
-  const fetchCart = async () => {
-    try {
-      const { data } = await axiosInstance.get("/api/v1/product/get-cart", {
+  const fetchProfile = async () => {
+    if (auth.token) {
+      const { data } = await axiosInstance.get(`/api/v1/auth/profile/`, {
         headers: {
           Authorization: `Bearer ${auth.token}`,
         },
       });
-      console.log(data.cart[0].products);
-      setCart(data.cart);
+      setUser(data);
+      setAddress(data.address);
+      setPhone(data.phone);
+    }
+  };
+
+  const fetchCart = async () => {
+    try {
+      if (auth.token) {
+        const { data } = await axiosInstance.get("/api/v1/product/get-cart", {
+          headers: {
+            Authorization: `Bearer ${auth.token}`,
+          },
+        });
+        setCart(data?.cart);
+        localStorage.setItem("cart", JSON.stringify(data?.cart));
+      }
       setLoading(false);
+      setChange(false);
     } catch (error) {
       console.log(error);
+      setFlash({
+        message: "Error at cart page while fetching cart",
+        bg: "bg-red-500",
+      });
+    } finally {
+      showFlash();
     }
   };
 
@@ -44,105 +70,33 @@ const CartPage = () => {
           },
         }
       );
-      console.log(data);
-      location.reload();
+      setChange(true);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const [user, setUser] = useState({
-    name: "",
-    email: "",
-    address: "",
-    phone: "",
-    address: "",
-  });
-
-  const placeOrder = async () => {
-    try {
-      if (!carts[0].products) {
-        setFlash({
-          message: "Product is required. Please fill it in.",
-          bg: "bg-red-500",
-        });
-        showFlash();
-        return;
-      }
-      const res = await axiosInstance.post(
-        `/api/v1/auth/send-order`,
-        {
-          products: carts[0].products,
-          user: user,
-          total: totalPrice(),
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${auth?.token}`,
-          },
-        }
-      );
-
-      if (res.data.success) {
-        clearCart();
-        fetchCart();
-      }
-      setFlash({
-        message: "Order Placed",
-        bg: "bg-green-500",
-      });
-      router.push("/cart");
-    } catch (error) {
-      console.log(error);
-      setFlash({
-        message: "Error! Order couldn't be placed",
-        bg: "bg-red-500",
-      });
-    }
-    showFlash();
-  };
-  const setUserDetails = () => {
-    if (auth) {
-      setUser({
-        name: auth.user?.name,
-        id: auth.user?._id,
-        email: auth.user?.email,
-        address: auth.user?.address,
-        phone: auth.user?.phone,
-      });
-    }
-  };
-
-  const clearCart = async () => {
-    try {
-      const { data } = await axiosInstance.delete(
-        `/api/v1/product/clear-cart`,
-        {
-          headers: {
-            Authorization: `Bearer ${auth?.token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const [user, setUser] = useState({});
 
   const totalPrice = () => {
     try {
       let total = 0;
-      carts[0]?.products.map((item) => {
+      cart[0]?.products?.map((item) => {
         total += item.product.price * item.quantity;
       });
+
       return total.toFixed(2);
     } catch (error) {
       console.log(error);
     }
   };
+  const calculateDiscountedPrice = (originalPrice) => {
+    const discountedPrice = originalPrice - (originalPrice * 20) / 100;
+    return discountedPrice;
+  };
 
   useEffect(() => {
-    setUserDetails();
+    fetchProfile();
     fetchCart();
   }, [auth]);
 
@@ -159,8 +113,8 @@ const CartPage = () => {
       <div id="cart" className="grid grid-cols-1 gap-5 lg:grid-cols-3">
         <div id="products" className="lg:col-span-2">
           <p className="text-6xl mb-6 py-4 text-center">Your cart</p>
-          {carts?.length > 0 ? (
-            carts[0]?.products.map((item, id) => {
+          {cart?.length > 0 ? (
+            cart[0]?.products?.map((item, id) => {
               return (
                 <div
                   key={item._id}
@@ -168,14 +122,31 @@ const CartPage = () => {
                 >
                   <div className="justify-self-center max-w-48">
                     <img
-                      src={item.product.photo[0].url}
+                      src={`${process.env.NEXT_PUBLIC_CLOUDINARY_PATH}/${item.product.photo[0].public_id}.jpg`}
                       alt="Product"
                       className="w-48"
                     />
                   </div>
                   <div className="self-center">
                     <p className="font-bold text-3xl">{item.product.name}</p>
-                    <p className="py-4 text-2xl">${item.product.price}</p>
+                    <p className="text-2xl py-4">
+                      <span className="line-through text-gray-500">
+                        {item.product.price?.toLocaleString("en-US", {
+                          style: "currency",
+                          currency: "USD",
+                        })}
+                      </span>
+                      <br />
+                      <span className="text-red-500">
+                        {calculateDiscountedPrice(
+                          item.product.price
+                        )?.toLocaleString("en-US", {
+                          style: "currency",
+                          currency: "USD",
+                        })}{" "}
+                        (20% off)
+                      </span>
+                    </p>
                     <p className="my-4">
                       <span className="font-bold">Quantity:</span>{" "}
                       {item.quantity}
@@ -207,7 +178,7 @@ const CartPage = () => {
         <div className="p-12 bg-slate-100">
           <p className="text-slate-500">Price details</p>
           <hr className="my-2" />
-          {carts[0]?.products?.length > 0 ? (
+          {cart[0]?.products?.length > 0 ? (
             <div>
               <table className="w-full mb-2">
                 <tbody>
@@ -249,9 +220,10 @@ const CartPage = () => {
                   <input
                     type="text"
                     value={user.phone}
-                    onChange={(e) =>
-                      setUser({ ...user, phone: e.target.value })
-                    }
+                    onChange={(e) => {
+                      setUser({ ...user, phone: e.target.value });
+                      setPhone(e.target.value);
+                    }}
                   />
                 </p>
                 <p>
@@ -268,21 +240,33 @@ const CartPage = () => {
                 <textarea
                   className="h-40 w-60 border-2"
                   defaultValue={user.address}
-                  onChange={(e) =>
-                    setUser({ ...user, address: e.target.value })
-                  }
+                  onChange={(e) => {
+                    setUser({ ...user, address: e.target.value });
+                    setAddress(e.target.value);
+                  }}
                 ></textarea>
               </div>
             </div>
           ) : (
             <p className="text-2xl text-gray-600 my-4">Nothing to show</p>
           )}
-          <Button
+          <div className="py-10">
+            <PayPalPayment
+              token={auth.token}
+              products={cart[0]?.products}
+              total={(totalPrice() - (totalPrice() * discount) / 100).toFixed(
+                2
+              )}
+              phone={phone}
+              address={address}
+            />
+            {/* <Button
             value="Checkout"
             onClick={placeOrder}
             bg="bg-green-500"
             color="text-white"
-          />
+          /> */}
+          </div>
         </div>
       </div>
     </div>

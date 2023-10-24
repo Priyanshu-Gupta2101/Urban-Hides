@@ -13,8 +13,16 @@ import { SearchProvider } from "./context/search";
 import { CartProvider } from "./context/cart";
 import { AuthProvider } from "./context/auth";
 
+import { PayPalScriptProvider } from "@paypal/react-paypal-js";
+
 export default function RootLayout({ children }) {
   const renderNavbar = !usePathname().startsWith("/search");
+
+  const initialOptions = {
+    clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT,
+    currency: "USD",
+    intent: "capture",
+  };
 
   useEffect(() => {
     (function (d, w, c) {
@@ -32,40 +40,44 @@ export default function RootLayout({ children }) {
   }, []);
 
   return (
-    <SearchProvider>
-      <CartProvider>
-        <AuthProvider>
-          <html lang="en">
-            <Head>
-              <link
-                href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@100;300;400;600;800&display=swap"
-                rel="stylesheet"
-              />
-              <link
-                rel="stylesheet"
-                href="https://demos.creative-tim.com/notus-js/assets/styles/tailwind.css"
-              />
-              <link
-                rel="stylesheet"
-                href="https://demos.creative-tim.com/notus-js/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css"
-              />
-            </Head>
-            <body className={inter.className}>
-              {renderNavbar && <Navbar />}
-              {/* <Sidebar /> */}
-              <div className="relative min-h-screen">
-                <div className="pb-40">{children}</div>
-              </div>
-              {renderNavbar && <Footer />}
-              {/* <script
+    <PayPalScriptProvider options={initialOptions}>
+      <SearchProvider>
+        <CartProvider>
+          <AuthProvider>
+            <html lang="en">
+              <Head>
+                <link
+                  href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@100;300;400;600;800&display=swap"
+                  rel="stylesheet"
+                />
+                <link
+                  rel="stylesheet"
+                  href="https://demos.creative-tim.com/notus-js/assets/styles/tailwind.css"
+                />
+                <link
+                  rel="stylesheet"
+                  href="https://demos.creative-tim.com/notus-js/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css"
+                />
+
+                <link rel="icon" href="/UH_Logo.svg" />
+              </Head>
+              <body className={inter.className}>
+                {renderNavbar && <Navbar />}
+                {/* <Sidebar /> */}
+                <div className="relative min-h-screen">
+                  <div className="pb-15">{children}</div>
+                </div>
+                {renderNavbar && <Footer />}
+                {/* <script
                 src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
                 integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
                 crossorigin="anonymous"
               ></script> */}
-            </body>
-          </html>
-        </AuthProvider>
-      </CartProvider>
-    </SearchProvider>
+              </body>
+            </html>
+          </AuthProvider>
+        </CartProvider>
+      </SearchProvider>
+    </PayPalScriptProvider>
   );
 }

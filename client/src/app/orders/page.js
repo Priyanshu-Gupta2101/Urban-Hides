@@ -20,7 +20,6 @@ const Orders = () => {
           Authorization: `Bearer ${auth?.token}`,
         },
       });
-      console.log(data);
       setOrders(data.data);
     } catch (err) {
       console.log(err);
@@ -34,7 +33,6 @@ const Orders = () => {
           Authorization: `Bearer ${auth?.token}`,
         },
       });
-      console.log(data);
       setUser(data.data.user[0]);
     } catch (error) {
       console.log(error);
