@@ -51,16 +51,20 @@ const navigation = {
               href: `/collections?category=Female&subcategory=Dresses`,
             },
             {
-              name: "Coats",
-              href: `/collections?category=Female&subcategory=Coats`,
+              name: "Shorts",
+              href: `/collections?category=Female&subcategory=Shorts`,
             },
             {
-              name: "Blazer",
-              href: `/collections?category=Female&subcategory=Blazer`,
+              name: "Jumpsuits",
+              href: `/collections?category=Female&subcategory=Jumpsuits`,
             },
             {
               name: "Jackets",
               href: `/collections?category=Female&subcategory=Jackets`,
+            },
+            {
+              name: "Hot Leather",
+              href: `/collections?category=Female&subcategory=Hot-Leather`,
             },
           ],
         },
@@ -93,79 +97,30 @@ const navigation = {
           name: "Clothing",
           items: [
             {
-              name: "Pants",
-              href: `/collections?category=Male&subcategory=Pants`,
+              name: "Biker Jackets",
+              href: `/collections?category=Male&subcategory=Biker-Jackets`,
             },
             {
-              name: "Sweaters",
-              href: `/collections?category=Male&subcategory=Sweaters`,
+              name: "Coats",
+              href: `/collections?category=Male&subcategory=Coats`,
             },
             {
-              name: "T-Shirts",
-              href: `/collections?category=Male&subcategory=T-Shirts`,
+              name: "Shirts",
+              href: `/collections?category=Male&subcategory=Shirts`,
             },
             {
               name: "Jackets",
               href: `/collections?category=Male&subcategory=Jackets`,
             },
             {
-              name: "Activewear",
-              href: `/collections?category=Male&subcategory=Activewear`,
-            },
-          ],
-        },
-      ],
-    },
-    {
-      id: "Kids",
-      name: "Kids",
-      featured: [
-        {
-          name: "New Arrivals",
-          href: "#",
-          imageSrc:
-            "https://tailwindui.com/img/ecommerce-images/product-page-04-detail-product-shot-01.jpg",
-          imageAlt:
-            "Drawstring top with elastic loop closure and textured interior padding.",
-        },
-        {
-          name: "Artwork Tees",
-          href: "#",
-          imageSrc:
-            "https://tailwindui.com/img/ecommerce-images/category-page-02-image-card-06.jpg",
-          imageAlt:
-            "Three shirts in gray, white, and blue arranged on table with same line drawing of hands and shapes overlapping on front of shirt.",
-        },
-      ],
-      sections: [
-        {
-          id: "clothing",
-          name: "Clothing",
-          items: [
-            {
               name: "Pants",
-              href: `/collections?category=Kids&subcategory=Pants`,
-            },
-            {
-              name: "Sweaters",
-              href: `/collections?category=Kids&subcategory=Sweaters`,
-            },
-            {
-              name: "T-Shirts",
-              href: `/collections?category=Kids&subcategory=T-Shirts`,
-            },
-            {
-              name: "Jackets",
-              href: `/collections?category=Kids&subcategory=Jackets`,
-            },
-            {
-              name: "Activewear",
-              href: `/collections?category=Kids&subcategory=Activewear`,
+              href: `/collections?category=Male&subcategory=Pants`,
             },
           ],
         },
       ],
     },
+
     {
       id: "Accessories",
       name: "Accessories",
@@ -197,12 +152,16 @@ const navigation = {
               href: `/collections?category=Accessories&subcategory=Wallet`,
             },
             {
-              name: "Pillow",
-              href: `/collections?category=Accessories&subcategory=Pillow`,
+              name: "Belts",
+              href: `/collections?category=Accessories&subcategory=Belts`,
             },
             {
-              name: "Handbages",
-              href: `/collections?category=Accessories&subcategory=Handbages`,
+              name: "Bags",
+              href: `/collections?category=Accessories&subcategory=Bags`,
+            },
+            {
+              name: "Combo",
+              href: `/collections?category=Accessories&subcategory=Combo-Wallet-&-Belt`,
             },
           ],
         },
