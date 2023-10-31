@@ -60,9 +60,6 @@ export default function RootLayout({ children }) {
                 />
 
                 <link rel="icon" href="/UH_Logo.svg" />
-                <script
-                  src={`https://www.paypal.com/sdk/js?client-id=${process.env.NEXT_PUBLIC_PAYPAL_CLIENT}`}
-                ></script>
               </Head>
               <body className={inter.className}>
                 {renderNavbar && <Navbar />}
