@@ -22,7 +22,6 @@ export default function RootLayout({ children }) {
     clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT,
     currency: "USD",
     intent: "capture",
-    mode: "live",
   };
 
   useEffect(() => {
