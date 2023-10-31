@@ -265,7 +265,7 @@ export default function Products() {
             ))}
           </div>
           <div className="m-2 p-3">
-            {!products && products.length < total && (
+            {products && products.length < total && (
               <button
                 className="btn loadmore"
                 onClick={(e) => {
