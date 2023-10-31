@@ -8,11 +8,12 @@ import Flash from "@/app/components/flash";
 import showFlash from "@/app/utils/showFlash";
 
 const Order = (props) => {
-  const [auth, setAuth] = useAuth();
+  const [order, setOrder] = useState({});
   const [products, setProducts] = useState([]);
+  const [auth, setAuth] = useAuth();
   const [total, setTotal] = useState(0);
   const [buyer, setBuyer] = useState({
-    buyer: {},
+    name: "",
     phone: null,
     address: "",
     email: "",
@@ -25,23 +26,27 @@ const Order = (props) => {
 
   const getOrderDetails = async () => {
     try {
-      const { data } = await axiosInstance.get(
-        `/api/v1/auth/order/${props.params.id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${auth?.token}`,
-          },
-        }
-      );
-      setProducts(data.products);
-      setBuyer({
-        buyer: data.buyer,
-        address: data.shipping_address,
-        phone: data.phone,
-        email: data.order_at_email,
-      });
-      setStatus(data.status);
-      setTotal(data.total);
+      if (auth.token) {
+        const { data } = await axiosInstance.get(
+          `/api/v1/auth/order/${props.params.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${auth?.token}`,
+            },
+          }
+        );
+        setStatus(data.status);
+        setOrder(data);
+        setProducts(data.products);
+        setBuyer({
+          name: data.buyer.name,
+          address: data.address,
+          phone: data.phone,
+          email: data.order_at_email,
+        });
+        setStatus(data.status);
+        setTotal(data.total);
+      }
     } catch (err) {
       console.log(err);
     }
@@ -49,17 +54,19 @@ const Order = (props) => {
 
   const updateStatus = async (status) => {
     try {
-      const { data } = await axiosInstance.put(
-        `/api/v1/auth/order-status/${props.params.id}`,
-        {
-          status,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${auth?.token}`,
+      if (auth.token) {
+        const { data } = await axiosInstance.put(
+          `/api/v1/auth/order-status/${props.params.id}`,
+          {
+            status,
           },
-        }
-      );
+          {
+            headers: {
+              Authorization: `Bearer ${auth?.token}`,
+            },
+          }
+        );
+      }
 
       setFlash({ message: "Order status updated", bg: "bg-green-500" });
     } catch (err) {
@@ -81,8 +88,8 @@ const Order = (props) => {
       <Flash flash={flash} />
       <p className="text-4xl font-bold">Order details</p>
       <div id="order-overview" className="text-slate-700 py-2">
-        <p>Order no. {props.params.id}</p>
-        <p>Ordered on 28th July, 10:12pm</p>
+        <p>Paypal Order ID. {order.order_id}</p>
+        <p>Ordered on {new Date(order.createdAt).toLocaleDateString()}</p>
         <Link href={`/admin/users/${buyer._id}`}>
           Ordered by <span className="underline">{buyer.name}</span>
         </Link>
@@ -94,6 +101,7 @@ const Order = (props) => {
           Order status:{" "}
           <select
             className="border-2 border-gray-500 p-1"
+            value={status}
             onChange={(e) => setStatus(e.target.value)}
           >
             <option value="Not processed">Not processed</option>
@@ -116,8 +124,8 @@ const Order = (props) => {
             <tbody>
               <tr className="border-2 border-black">
                 <th className="border-2 border-black py-6">Sr no.</th>
-                <th className="border-2 border-black py-6">Product ID</th>
                 <th className="border-2 border-black py-6">Product Name</th>
+                <th className="border-2 border-black py-6">Product</th>
                 <th className="border-2 border-black  ">Size</th>
                 <th className="border-2 border-black  ">Color</th>
                 <th className="border-2 border-black">Quantity</th>
@@ -125,13 +133,20 @@ const Order = (props) => {
               </tr>
               {products.map((product, index) => {
                 return (
-                  <tr key={product.product._id}>
+                  <tr key={product.product?._id}>
                     <td className="border-2 border-black py-6">{index + 1}</td>
                     <td className="border-2 border-black py-6">
-                      {product.product._id}
+                      {product.product?.name}
                     </td>
                     <td className="border-2 border-black py-6">
-                      {product.product.name}
+                      <img
+                        className="img-fluid cursor-pointer"
+                        src={`${process.env.NEXT_PUBLIC_CLOUDINARY_PATH}/${product.product?.photo[0].public_id}.jpg`}
+                        fill="true"
+                        priority="true"
+                        sizes="max-width"
+                        alt={product.product?.name}
+                      />
                     </td>
                     <td className="border-2 border-black">{product.size}</td>
                     <td className="border-2 border-black">{product.color}</td>
@@ -139,7 +154,7 @@ const Order = (props) => {
                       {product.quantity}
                     </td>
                     <td className="border-2 border-black">
-                      {product.product.price}
+                      {product.product?.price}
                     </td>
                   </tr>
                 );

@@ -251,6 +251,7 @@ const CreateProduct = () => {
               className="p-1 my-7 border-2 border-slate-400"
               name="size"
               placeholder="Small.."
+              value={newSize}
               onChange={(e) => setNewSize(e.target.value)}
             />
           </label>
@@ -283,6 +284,7 @@ const CreateProduct = () => {
               className="p-1 my-7 border-2 border-slate-400"
               name="color"
               placeholder="Black, ..."
+              value={newColor}
               onChange={(e) => setNewColor(e.target.value)}
             />
           </label>

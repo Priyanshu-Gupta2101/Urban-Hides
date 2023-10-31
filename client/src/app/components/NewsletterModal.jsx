@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import axiosInstance from "@/app/hooks/axiosinstance"; // Import your axios instance.
+import React, { useState, useEffect } from "react";
+import axiosInstance from "@/app/hooks/axiosinstance";
 import Flash from "@/app/components/flash";
 import showFlash from "@/app/utils/showFlash";
 
 function NewsletterModal() {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [flash, setFlash] = useState({
@@ -30,30 +30,34 @@ function NewsletterModal() {
 
     try {
       await axiosInstance.post("/api/v1/subscribe", { email });
+      handleCleanUp();
+    } catch (error) {
+      handleCleanUp();
+    } finally {
       setMessage("Successfully subscribed to the newsletter!");
       setFlash({
         message: message,
         bg: "bg-green-500",
       });
-      handleCleanUp();
-    } catch (error) {
-      setMessage(
-        "Could not subscribe to the newsletter. Please try again later."
-      );
-      setFlash({
-        message: message,
-        bg: "bg-red-500",
-      });
-      handleCleanUp();
+      closeModal();
+      showFlash();
     }
-
-    showFlash();
   };
+
+  useEffect(() => {
+    const hasModalBeenShown = localStorage.getItem("hasModalBeenShown");
+
+    if (!hasModalBeenShown) {
+      setIsOpen(true);
+      localStorage.setItem("hasModalBeenShown", "true");
+    }
+  }, []);
 
   return (
     <>
       {isOpen && (
         <div className="fixed inset-0 flex items-center justify-center z-50">
+          <Flash flash={flash} />
           <div
             className="absolute inset-0 bg-gray-900 opacity-50"
             onClick={closeModal}
@@ -63,7 +67,7 @@ function NewsletterModal() {
               className="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
               onClick={closeModal}
             >
-              &times;
+              X
             </button>
             <h2 className="text-2xl font-semibold mb-4">
               Subscribe to Our Newsletter

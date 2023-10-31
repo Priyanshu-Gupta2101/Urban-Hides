@@ -4,13 +4,13 @@ import mongoosePaginate from "mongoose-paginate-v2";
 const reviewSchema = new mongoose.Schema(
   {
     product: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Product",
+      type: mongoose.ObjectId,
+      ref: "Products",
       required: true,
     },
     user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      type: mongoose.ObjectId,
+      ref: "users",
       required: true,
     },
     text: {
@@ -20,14 +20,14 @@ const reviewSchema = new mongoose.Schema(
     likes: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+        ref: "users",
       },
     ],
     replies: [
       {
         user: {
           type: mongoose.Schema.Types.ObjectId,
-          ref: "User",
+          ref: "users",
         },
         text: {
           type: String,

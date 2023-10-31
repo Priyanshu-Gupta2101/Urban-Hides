@@ -8,7 +8,6 @@ export const requireSignIn = async (req, res, next) => {
       req.headers.authorization.split(" ")[1],
       process.env.JWT_SECRET
     );
-    console.log(decode + " decode");
     req.user = decode;
     next();
   } catch (error) {

@@ -27,20 +27,27 @@ const orderSchema = new mongoose.Schema(
       default: "Not Processed",
       enum: ["Not Processed", "Processing", "Shipped", "Delivered", "Cancel"],
     },
-    shipping_address: {
-      type: String,
-      required: true,
-    },
-    phone: {
-      type: Number,
-      required: true,
-    },
     order_at_email: {
       type: String,
       required: true,
     },
     total: {
       type: Number,
+      required: true,
+    },
+
+    order_id: {
+      type: String,
+      required: true,
+    },
+
+    address: {
+      type: String,
+      required: true,
+    },
+    phone: {
+      type: Number,
+      required: true,
     },
   },
   { timestamps: true }

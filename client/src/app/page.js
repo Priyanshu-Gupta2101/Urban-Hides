@@ -10,7 +10,7 @@ import "./embla.css";
 import NewsletterModal from "./components/NewsletterModal.jsx";
 
 const OPTIONS = { loop: true };
-const SLIDE_COUNT = 4;
+const SLIDE_COUNT = 5;
 const SLIDES = Array.from(Array(SLIDE_COUNT).keys());
 //Styles
 import "./home.css";
@@ -36,14 +36,14 @@ export default function Home() {
       </div>
       <div className="h-10"></div>
       <div className="separator-div flex justify-around items-center">
-        <img width={200} src="/logo.jpg" alt="logo" id="logo" />
-        <h2 className={` text-white`}>10% OFF for our first 100 customers !</h2>
+        <img width={300} src="/logo.jpg" alt="logo" id="logo" />
+        <h2 className={` text-white`}>Start your leather journey here !</h2>
       </div>
 
       <div className={`flex justify-center `}>
-        <h2 className="categories-heading">Categories</h2>
+        <h1 className="text-5xl mt-14">Categories</h1>
       </div>
-      <div className="p-10" id="categories">
+      <div className="p-7" id="categories">
         <CategoriesList />
       </div>
       <div className="h-20"></div>
@@ -67,11 +67,11 @@ export default function Home() {
         </div>
       </div>
       <div className="h-10"></div>
-      <div className={`flex justify-center`}>
-        <h2 className="categories-heading">Why Choose Us ?</h2>
-      </div>
       <div className="p-10 ">
-        <div className="grid gap-20 grid-cols-1 md:grid-cols-3 flex justify-center">
+        <div className="flex flex-col items-center">
+          <h1 className="categories-heading my-7">Why choose us? </h1>
+        </div>
+        <div className="grid gap-20 grid-cols-1 md:grid-cols-2 flex justify-center mx-20">
           <BestThree />
         </div>
       </div>
@@ -79,7 +79,6 @@ export default function Home() {
 
       <NewsLetter />
 
-      {/* Show the NewsletterModal if isNewsletterModalOpen is true */}
       {modalVisible && <NewsletterModal />}
     </>
   );

@@ -43,7 +43,7 @@ const Dashboard = () => {
         </Link>
         <Link href="/profile">
           <Card
-            text="User"
+            text="Profile"
             color="bg-gradient-to-r from-purple-400 via-pink-400 to-red-400"
             img="/user.png"
           />

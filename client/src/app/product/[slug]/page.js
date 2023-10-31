@@ -170,7 +170,7 @@ const Product = () => {
   };
 
   const calculateDiscountedPrice = (originalPrice) => {
-    const discountedPrice = originalPrice - (originalPrice * 20) / 100;
+    const discountedPrice = originalPrice + (originalPrice * 20) / 100;
     return discountedPrice;
   };
 
@@ -211,21 +211,21 @@ const Product = () => {
           <Star />
           <Star />
           <p className="text-3xl py-2">
-            <span className="line-through text-gray-500">
-              {product.price?.toLocaleString("en-US", {
-                style: "currency",
-                currency: "USD",
-              })}
-            </span>
-            <br />
-            <span className="text-red-500">
+            <span className="line-through text-red-500">
               {calculateDiscountedPrice(product.price)?.toLocaleString(
                 "en-US",
                 {
                   style: "currency",
                   currency: "USD",
                 }
-              )}{" "}
+              )}
+            </span>
+            <br />
+            <span className="text-gray-500">
+              {product.price?.toLocaleString("en-US", {
+                style: "currency",
+                currency: "USD",
+              })}{" "}
               (20% off)
             </span>
           </p>
@@ -276,7 +276,7 @@ const Product = () => {
                 {p}
               </button>
             ))}
-            <button
+            {/* <button
               key="custom"
               value="Custom"
               className="bg-white text-black border-black  border-2 rounded p-3.5 mr-2.5"
@@ -285,14 +285,14 @@ const Product = () => {
               }}
             >
               Custom
-            </button>
+            </button> */}
           </div>
 
           <br />
 
           <Link
             className="text-blue-500 text-md hover:underline"
-            onClick={openModal}
+            // onClick={openModal}
             href="/size-guide"
           >
             Checkout our Size Guide

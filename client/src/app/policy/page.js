@@ -1,11 +1,11 @@
 import React from "react";
-import PolicyContent from "../components/PolicyContent";
+import TermsAndConditions from "../components/TermsAndConditions";
 
 const page = () => {
   return (
     <div className="relative min-h-screen">
       <div className="p-20">
-        <PolicyContent />
+        <TermsAndConditions />
       </div>
     </div>
   );

@@ -7,7 +7,7 @@ import Flash from "@/app/components/flash";
 import showFlash from "@/app/utils/showFlash";
 import { useCart } from "../context/cart";
 
-const PayPalPayment = ({ token, products, total, phone, address }) => {
+const PayPalPayment = ({ custom, token, products, total, phone, address }) => {
   const router = useRouter();
   const [auth, setAuth] = useAuth();
   const [cart, setCart] = useCart();
@@ -47,6 +47,8 @@ const PayPalPayment = ({ token, products, total, phone, address }) => {
           products: products,
           user: auth.user,
           total: total,
+          phone: phone,
+          address: address,
         }),
       }
     )
@@ -54,18 +56,34 @@ const PayPalPayment = ({ token, products, total, phone, address }) => {
         return response.json();
       })
       .then((data) => {
-        //     const res = validateTransactionAndCaptureOrder(
-        //       data.id,
-        //       process.env.NEXT_PUBLIC_PAYPAL_CLIENT
-        //     );
+        // return data.id;
 
-        //     if (!(res.status === 200)) {
-        //       return { success: false, message: "Validation failed" };
-        //     } else {
-        //       return data.id;
-        //     }
-        return data.id;
+        const res = validateTransactionAndCaptureOrder(data.id);
+        if (!(res.status === 200)) {
+          return { success: false, message: "Validation failed" };
+        } else {
+          return data.id;
+        }
       });
+  };
+
+  const validateTransactionAndCaptureOrder = async (trackingId) => {
+    try {
+      const response = await fetch(
+        `${process.env.BASE_PATH}/v1/risk/transaction-contexts/${process.env.NEXT_PUBLIC_MERCHANT_ID}/${trackingId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      return response.json;
+    } catch (error) {
+      console.error("Error validating transaction:", error);
+      return { success: false, message: "Error validating transaction" };
+    }
   };
 
   const onApprove = async (id) => {
@@ -102,28 +120,58 @@ const PayPalPayment = ({ token, products, total, phone, address }) => {
         showFlash();
         return;
       }
-      const res = await axiosInstance.post(
-        `/api/v1/auth/place-order`,
-        {
-          orderID: id,
-          products: products,
-          user: auth.user,
-          total: total,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
 
-      if (res.data.success) {
-        clearCart();
+      if (!custom) {
+        const res = await axiosInstance.post(
+          `/api/v1/auth/place-order`,
+          {
+            orderID: id,
+            products: products,
+            user: auth.user,
+            total: total,
+            address: address,
+            phone: phone,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (res.data.success) {
+          setFlash({
+            message: "Order Placed",
+            bg: "bg-green-500",
+          });
+          clearCart();
+        }
+      } else {
+        const res = await axiosInstance.post(
+          `/api/v1/product/custom`,
+          {
+            orderID: id,
+            product: products,
+            user: auth.user,
+            total: total,
+            address: address,
+            phone: phone,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (res.data.success) {
+          setFlash({
+            message: "Order Placed",
+            bg: "bg-green-500",
+          });
+        }
       }
-      setFlash({
-        message: "Order Placed",
-        bg: "bg-green-500",
-      });
+
       router.push("/cart");
     } catch (error) {
       console.log(error);

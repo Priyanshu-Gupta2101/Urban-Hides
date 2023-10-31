@@ -11,6 +11,7 @@ import { useCart } from "../context/cart";
 import PayPalPayment from "../components/PayPalPayment";
 
 const CartPage = () => {
+  const [custom, setCustom] = useState(0);
   const [phone, setPhone] = useState();
   const [address, setAddress] = useState();
   const [auth, setAuth] = useAuth();
@@ -23,8 +24,10 @@ const CartPage = () => {
     bg: "",
   });
 
+  const [shipping, setShipping] = useState(35);
+
   const fetchProfile = async () => {
-    if (auth.token) {
+    if (auth?.token !== "") {
       const { data } = await axiosInstance.get(`/api/v1/auth/profile/`, {
         headers: {
           Authorization: `Bearer ${auth.token}`,
@@ -38,12 +41,13 @@ const CartPage = () => {
 
   const fetchCart = async () => {
     try {
-      if (auth.token) {
+      if (auth?.token !== "") {
         const { data } = await axiosInstance.get("/api/v1/product/get-cart", {
           headers: {
             Authorization: `Bearer ${auth.token}`,
           },
         });
+
         setCart(data?.cart);
         localStorage.setItem("cart", JSON.stringify(data?.cart));
       }
@@ -70,6 +74,9 @@ const CartPage = () => {
           },
         }
       );
+
+      // setCart(data?.cart);
+      //   localStorage.setItem("cart", JSON.stringify(data?.cart));
       setChange(true);
     } catch (error) {
       console.log(error);
@@ -85,20 +92,20 @@ const CartPage = () => {
         total += item.product.price * item.quantity;
       });
 
-      return total.toFixed(2);
+      return total;
     } catch (error) {
       console.log(error);
     }
   };
   const calculateDiscountedPrice = (originalPrice) => {
-    const discountedPrice = originalPrice - (originalPrice * 20) / 100;
-    return discountedPrice;
+    const discountedPrice = originalPrice + (originalPrice * 20) / 100;
+    return Number(discountedPrice.toFixed(2));
   };
 
   useEffect(() => {
     fetchProfile();
     fetchCart();
-  }, [auth]);
+  }, [auth, change]);
 
   if (!auth)
     return (
@@ -113,7 +120,7 @@ const CartPage = () => {
       <div id="cart" className="grid grid-cols-1 gap-5 lg:grid-cols-3">
         <div id="products" className="lg:col-span-2">
           <p className="text-6xl mb-6 py-4 text-center">Your cart</p>
-          {cart?.length > 0 ? (
+          {cart[0]?.products?.length > 0 ? (
             cart[0]?.products?.map((item, id) => {
               return (
                 <div
@@ -122,7 +129,7 @@ const CartPage = () => {
                 >
                   <div className="justify-self-center max-w-48">
                     <img
-                      src={`${process.env.NEXT_PUBLIC_CLOUDINARY_PATH}/${item.product.photo[0].public_id}.jpg`}
+                      src={`${process.env.NEXT_PUBLIC_CLOUDINARY_PATH}/${item.product?.photo[0].public_id}.jpg`}
                       alt="Product"
                       className="w-48"
                     />
@@ -131,16 +138,16 @@ const CartPage = () => {
                     <p className="font-bold text-3xl">{item.product.name}</p>
                     <p className="text-2xl py-4">
                       <span className="line-through text-gray-500">
-                        {item.product.price?.toLocaleString("en-US", {
+                        {calculateDiscountedPrice(
+                          item.product.price
+                        )?.toLocaleString("en-US", {
                           style: "currency",
                           currency: "USD",
                         })}
                       </span>
                       <br />
                       <span className="text-red-500">
-                        {calculateDiscountedPrice(
-                          item.product.price
-                        )?.toLocaleString("en-US", {
+                        {item.product.price?.toLocaleString("en-US", {
                           style: "currency",
                           currency: "USD",
                         })}{" "}
@@ -163,7 +170,7 @@ const CartPage = () => {
                       bg="bg-red-500"
                       color="text-white"
                       border="border-none"
-                      onClick={() => deleteFromCart(item.product._id)}
+                      onClick={() => deleteFromCart(item._id)}
                     />
                   </div>
                 </div>
@@ -184,11 +191,15 @@ const CartPage = () => {
                 <tbody>
                   <tr>
                     <td className="py-2">Price</td>
-                    <td className="text-right">${totalPrice()}</td>
+                    <td className="text-right">
+                      ${calculateDiscountedPrice(totalPrice())}
+                    </td>
                   </tr>
                   <tr>
                     <td className="py-2">Delivery</td>
-                    <td className="text-right text-green-500">Free</td>
+                    <td className="text-right text-green-500">
+                      {totalPrice() > 500 ? "Free" : `$${shipping}`}
+                    </td>
                   </tr>
                   <tr>
                     <td className="py-2">Discount</td>
@@ -197,69 +208,99 @@ const CartPage = () => {
                   <tr className="border-y-2">
                     <td className="py-2 font-bold">Total</td>
                     <td className="text-right font-bold">
-                      $
-                      {(totalPrice() - (totalPrice() * discount) / 100).toFixed(
-                        2
-                      )}
+                      ${totalPrice() > 500 ? totalPrice() : totalPrice() + 35}
                     </td>
                   </tr>
                 </tbody>
               </table>
-              <div id="extra-info" className="mt-24">
-                <p className="text-2xl font-bold">Shipping information</p>
-                <p>
-                  Name:{" "}
+              <div
+                id="extra-info"
+                className="mt-8 p-4 border border-gray-300 rounded"
+              >
+                <p className="text-2xl font-bold mb-4">Shipping Information</p>
+                <div className="mb-4">
+                  <label
+                    htmlFor="name"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Name
+                  </label>
                   <input
                     type="text"
+                    id="name"
                     value={user.name}
                     onChange={(e) => setUser({ ...user, name: e.target.value })}
+                    className="mt-1 p-2 w-full border rounded-md"
                   />
-                </p>
-                <p>
-                  Phone:{" "}
+                </div>
+                <div className="mb-4">
+                  <label
+                    htmlFor="phone"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Phone
+                  </label>
                   <input
                     type="text"
+                    id="phone"
                     value={user.phone}
                     onChange={(e) => {
                       setUser({ ...user, phone: e.target.value });
                       setPhone(e.target.value);
                     }}
+                    className="mt-1 p-2 w-full border rounded-md"
                   />
-                </p>
-                <p>
-                  Email:{" "}
+                </div>
+                <div className="mb-4">
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Email
+                  </label>
                   <input
                     type="email"
+                    id="email"
                     value={user.email}
                     onChange={(e) =>
                       setUser({ ...user, email: e.target.value })
                     }
+                    className="mt-1 p-2 w-full border rounded-md"
                   />
-                </p>
-                <p>Shipping address : </p>
-                <textarea
-                  className="h-40 w-60 border-2"
-                  defaultValue={user.address}
-                  onChange={(e) => {
-                    setUser({ ...user, address: e.target.value });
-                    setAddress(e.target.value);
-                  }}
-                ></textarea>
+                </div>
+                <div className="mb-4">
+                  <label
+                    htmlFor="address"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Shipping Address
+                  </label>
+                  <textarea
+                    id="address"
+                    className="mt-1 p-2 w-full border rounded-md h-32"
+                    defaultValue={user.address}
+                    onChange={(e) => {
+                      setUser({ ...user, address: e.target.value });
+                      setAddress(e.target.value);
+                    }}
+                  ></textarea>
+                </div>
               </div>
             </div>
           ) : (
             <p className="text-2xl text-gray-600 my-4">Nothing to show</p>
           )}
           <div className="py-10">
-            <PayPalPayment
-              token={auth.token}
-              products={cart[0]?.products}
-              total={(totalPrice() - (totalPrice() * discount) / 100).toFixed(
-                2
-              )}
-              phone={phone}
-              address={address}
-            />
+            {cart[0]?.products?.length !== 0 && user.address && user.phone && (
+              <PayPalPayment
+                custom={custom}
+                token={auth.token}
+                products={cart[0]?.products}
+                total={totalPrice() > 500 ? totalPrice() : totalPrice() + 35}
+                phone={user.phone}
+                address={user.address}
+              />
+            )}
             {/* <Button
             value="Checkout"
             onClick={placeOrder}

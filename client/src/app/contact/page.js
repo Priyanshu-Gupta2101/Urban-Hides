@@ -44,7 +44,7 @@ export default function ContactForm() {
         <div className="w-1/2 pr-4 px-4">
           <p className="text-lg mt-2">
             <a href="mailto:sales@urbanhides.com">
-              <AiOutlineMail /> sales@urbanhides.com
+              <AiOutlineMail /> info@urbanhides.com
             </a>
           </p>
           <div className="flex items-center mt-2">
@@ -59,7 +59,7 @@ export default function ContactForm() {
               <AiOutlinePhone size={20} />{" "}
               {/* Use react-icons for phone icon */}
             </div>
-            <p className="text-lg">India: +91 123 456 7890</p>
+            <p className="text-lg">India: +91 98197 16095</p>
           </div>
         </div>
 

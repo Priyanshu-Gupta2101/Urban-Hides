@@ -204,7 +204,7 @@ const Navbar = () => {
 
   const getCartCount = async () => {
     try {
-      if (auth.user) {
+      if (auth.token !== "") {
         const res = await axiosInstance.get("api/v1/product/cart-count", {
           headers: {
             Authorization: `Bearer ${auth?.token}`,
@@ -221,7 +221,7 @@ const Navbar = () => {
 
   useEffect(() => {
     getCartCount();
-  }, [cart]);
+  }, [cart, auth]);
 
   return (
     <div className="bg-white">
@@ -334,12 +334,12 @@ const Navbar = () => {
                             >
                               {section.items.map((item) => (
                                 <li key={item.name} className="flow-root">
-                                  <Link
+                                  <a
                                     href={item.href}
                                     className="-m-2 block p-2 text-gray-500"
                                   >
                                     {item.name}
-                                  </Link>
+                                  </a>
                                 </li>
                               ))}
                             </ul>
@@ -402,9 +402,10 @@ const Navbar = () => {
       </Transition.Root>
 
       <header className="relative bg-white">
-        <marquee className="flex h-10 items-center justify-center bg-indigo-600 px-4 text-sm font-medium text-white sm:px-6 lg:px-8">
-          Get free delivery on orders over $100 | 20% discount on all products |
-          Halloween season is here checkout our latest collections
+        <marquee className="flex h-10 items-center bg-indigo-600 px-4 text-sm font-medium text-white sm:px-6 lg:px-8">
+          {" "}
+          20% discount on all products | Halloween season is here checkout our
+          latest collections | +1 323 284 6307 | info@www.urbanhides.com
         </marquee>
 
         <nav

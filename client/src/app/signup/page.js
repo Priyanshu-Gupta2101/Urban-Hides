@@ -85,15 +85,9 @@ const Signup = (props) => {
           type="password"
           placeholder="Password"
           value={password}
+          minlength="6"
           onChange={(e) => {
-            if (e.target.value.length < 6) {
-              setFlash({
-                message: "Password must be 6 characters long",
-                bg: "bg-red-500",
-              });
-            } else {
-              setPassword(e.target.value);
-            }
+            setPassword(e.target.value);
           }}
         />
         <label className="my-2">

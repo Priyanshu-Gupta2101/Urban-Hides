@@ -2,10 +2,10 @@ import { CalendarDaysIcon, HandRaisedIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 import Flash from "@/app/components/flash";
 import showFlash from "@/app/utils/showFlash";
+import axiosInstance from "@/app/hooks/axiosinstance";
 
 export default function Example() {
   const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
   const [flash, setFlash] = useState({
     message: "",
     bg: "",
@@ -13,7 +13,6 @@ export default function Example() {
 
   const handleCleanUp = () => {
     setEmail("");
-    setMessage("");
     setFlash({
       message: "",
       bg: "",
@@ -24,25 +23,19 @@ export default function Example() {
     e.preventDefault();
 
     try {
-      await axiosInstance.post("/api/v1/subscribe", { email });
-      setMessage("Successfully subscribed to the newsletter!");
-      setFlash({
-        message: message,
-        bg: "bg-green-500",
-      });
+      const { data } = await axiosInstance.post("/api/v1/subscribe", { email });
+      console.log(data.msg);
       handleCleanUp();
     } catch (error) {
-      setMessage(
-        "Could not subscribe to the newsletter. Please try again later."
-      );
-      setFlash({
-        message: message,
-        bg: "bg-red-500",
-      });
+      console.log(error);
       handleCleanUp();
+    } finally {
+      setFlash({
+        message: "Subscribed to the newsletter successfully",
+        bg: "bg-green-500",
+      });
+      showFlash();
     }
-
-    showFlash();
   };
   return (
     <div className="relative isolate overflow-hidden bg-white-900 py-8 sm:py-24 lg:py-32">

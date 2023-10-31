@@ -4,12 +4,16 @@ import { useAuth } from "@/app/context/auth";
 import axiosInstance from "@/app/hooks/axiosinstance";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import ImageSlider from "@/app/components/ImageSlider";
 
 const UpdateProduct = (props) => {
   const router = useRouter();
   const [categories, setCategories] = useState([]);
+  const [category, setCategory] = useState("");
 
-  const [category, setCategory] = useState(categories[0]?._id);
+  const [subcategory, setSubcategory] = useState("");
+  const [subcategories, setSubcategories] = useState([]);
+
   const [id, setID] = useState("");
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -21,6 +25,10 @@ const UpdateProduct = (props) => {
   const [auth, setAuth] = useAuth();
   const [selectedSizes, setSelectedSizes] = useState([]);
   const [selectedColors, setSelectedColors] = useState([]);
+
+  const [isBestSelling, setBestSelling] = useState("1");
+
+  const [photo, setPhoto] = useState([]);
 
   const [newSize, setNewSize] = useState("");
 
@@ -68,18 +76,23 @@ const UpdateProduct = (props) => {
 
   const fetchProduct = async (slug) => {
     try {
-      const data = await axiosInstance.get(
+      const { data } = await axiosInstance.get(
         `/api/v1/product/get-product/${slug}`
       );
-      setName(data.data.product.name);
-      setDescription(data.data.product.description);
-      setPrice(data.data.product.price);
-      setQuantity(data.data.product.quantity);
-      setShipping(data.data.product.shipping);
-      setCategory(data.data.product.category._id);
-      setID(data.data.product._id);
-      setFrontImages(data.data.product.photo[0].url);
-      setBackImages(data.data.product.photo[1].url);
+      setName(data.product.name);
+      setDescription(data.product.description);
+      setSubcategory(data.product.subcategory);
+      setPrice(data.product.price);
+      setQuantity(data.product.quantity);
+      setShipping(data.product.shipping);
+      setCategory(data.product.category._id);
+      setID(data.product._id);
+      setPhoto(data.product.photo);
+      setFrontImages(data.product.photo[0].url);
+      setBackImages(data.product.photo[1].url);
+      setFeatures(data.product.features);
+      setSelectedColors(data.product.color);
+      setSelectedSizes(data.product.size);
     } catch (err) {
       console.log(err);
     }
@@ -123,6 +136,8 @@ const UpdateProduct = (props) => {
     formData.append("size", Array.from(selectedSizes));
     formData.append("color", Array.from(selectedColors));
     formData.append("features", Array.from(features));
+    formData.append("subcategory", subcategory);
+    formData.append("isBestSelling", isBestSelling);
 
     try {
       const response = await fetch(
@@ -147,177 +162,229 @@ const UpdateProduct = (props) => {
     updateProduct(id);
   };
 
+  useEffect(() => {
+    // Find the selected category object based on its _id
+    const selectedCategory = categories.find((cat) => cat._id === category);
+
+    // Extract subcategories from the selected category
+    const categorySubcategories = selectedCategory
+      ? selectedCategory.subcategories
+      : [];
+
+    setSubcategories(categorySubcategories);
+    setSubcategory(""); // Reset subcategory when the category changes
+  }, [category, categories]);
+
   return (
     <div className="grid place-items-center py-12">
       <p className="text-4xl">Update product {props.params.slug}</p>
-      <form
-        className="md:w-96 my-4 [&>*]:my-4 p-6 shadow-2xl rounded"
-        encType="multipart/form-data"
-        onSubmit={(e) => {
-          e.preventDefault();
-          onSubmit(id);
-        }}
-      >
-        <label className="text-2xl">Select category</label>
-        <br />
-        <select value={category} onChange={(e) => setCategory(e.target.value)}>
-          {categories.map((category) => {
-            return (
-              <option key={category._id} value={category._id}>
-                {category.name}
+      <div className="mt-10 flex flex-row justify-center item-center gap-12">
+        {photo?.length > 0 && (
+          <ImageSlider
+            props={photo}
+            className="rounded-xl md:min-w-350 md:max-w-xs self-center mt-4"
+          />
+        )}
+        <form
+          className="md:w-96 my-4 [&>*]:my-4 p-6 shadow-2xl rounded"
+          encType="multipart/form-data"
+          onSubmit={(e) => {
+            e.preventDefault();
+            onSubmit(id);
+          }}
+        >
+          <label className="text-2xl">Select category</label>
+          <br />
+          <select
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+          >
+            {categories.map((category) => {
+              return (
+                <option key={category._id} value={category._id}>
+                  {category.name}
+                </option>
+              );
+            })}
+          </select>
+          <br />
+          {/* Subcategory select field */}
+          <label className="text-2xl">Select subcategory</label>
+          <br />
+          <select
+            value={subcategory}
+            onChange={(e) => setSubcategory(e.target.value)}
+            disabled={!category} // Disable if no category selected
+          >
+            <option value="" disabled>
+              Select your option
+            </option>
+            {subcategories.map((subcat) => (
+              <option key={subcat._id} value={subcat._id}>
+                {subcat.name}
               </option>
-            );
-          })}
-        </select>
-        <br />
-        <input
-          className="p-1 my-7 border-2 border-slate-400"
-          type="text"
-          placeholder="Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-        <br />
-        <textarea
-          className="p-1 my-7 border-2 border-slate-400"
-          defaultValue={description}
-          placeholder="Write description of product"
-          onChange={(e) => setDescription(e.target.value)}
-        ></textarea>
-        <br />
-        <input
-          type="number"
-          className="p-1 my-7 border-2 border-slate-400"
-          placeholder="Price"
-          name="price"
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
-        />
-        <br />
-        <br />
-        <label>Add front image of product </label>
-        <input
-          type="file"
-          accept="image/*"
-          value={front}
-          onChange={handleFrontChange}
-        />
-        <br />
-        <label>Add back image of product </label>
-        <input
-          type="file"
-          accept="image/*"
-          value={back}
-          onChange={handleBackChange}
-        />
-        <br />
-        <br />
-        <input
-          type="number"
-          className="p-1 my-7 border-2 border-slate-400"
-          name="quantity"
-          placeholder="Quantity"
-          value={quantity}
-          onChange={(e) => setQuantity(e.target.value)}
-        />
-        <br />
-        <label>Shipping availiable?</label>
-        <br />
-        <select value={shipping} onChange={(e) => setShipping(e.target.value)}>
-          <option value="1">Yes</option>
-          <option value="0">No</option>
-        </select>
-        <br />
-        <div>
-          <label>
-            Enter a size:
-            <br />
-            <input
-              type="text"
-              className="p-1 my-7 border-2 border-slate-400"
-              name="size"
-              placeholder="Small.."
-              onChange={(e) => setNewSize(e.target.value)}
-            />
-          </label>
+            ))}
+          </select>
           <br />
-          <button type="button" onClick={addSize}>
-            Add
-          </button>
-        </div>
-        <div>
-          <button type="button" onClick={() => setSelectedSizes([])}>
-            Clear All
-          </button>
-        </div>
-        <div>
-          <strong>Selected Sizes:</strong>
+          <input
+            className="p-1 my-7 border-2 border-slate-400"
+            type="text"
+            placeholder="Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <br />
+          <textarea
+            className="p-1 my-7 border-2 border-slate-400"
+            defaultValue={description}
+            placeholder="Write description of product"
+            onChange={(e) => setDescription(e.target.value)}
+          ></textarea>
+          <br />
+          <input
+            type="number"
+            className="p-1 my-7 border-2 border-slate-400"
+            placeholder="Price"
+            name="price"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+          />
+          <br />
+          <br />
+          <label>Add front image of product </label>
+          <input type="file" accept="image/*" onChange={handleFrontChange} />
+          <br />
+          <label>Add back image of product </label>
+          <input type="file" accept="image/*" onChange={handleBackChange} />
+          <br />
+          <br />
+          <input
+            type="number"
+            className="p-1 my-7 border-2 border-slate-400"
+            name="quantity"
+            placeholder="Quantity"
+            value={quantity}
+            onChange={(e) => setQuantity(e.target.value)}
+          />
+          <br />
+          <label>Shipping availiable?</label>
+          <br />
+          <select
+            value={shipping}
+            onChange={(e) => setShipping(e.target.value)}
+          >
+            <option value="1">Yes</option>
+            <option value="0">No</option>
+          </select>
+          <br />
+          <label>Is Best Selling?</label>
+          <br />
+          <select
+            value={isBestSelling}
+            onChange={(e) => setBestSelling(e.target.value)}
+          >
+            <option value="1">Yes</option>
+            <option value="0">No</option>
+          </select>
+          <br />
+          <div>
+            <label>
+              Enter a size:
+              <br />
+              <input
+                type="text"
+                className="p-1 my-7 border-2 border-slate-400"
+                name="size"
+                placeholder="Small.."
+                value={newSize}
+                onChange={(e) => setNewSize(e.target.value)}
+              />
+            </label>
+            <br />
+            <button type="button" onClick={addSize}>
+              Add
+            </button>
+          </div>
+          <div>
+            <button type="button" onClick={() => setSelectedSizes([])}>
+              Clear All
+            </button>
+          </div>
+          <div>
+            <strong>Selected Sizes:</strong>
+            <ul>
+              {selectedSizes.map((size, index) => (
+                <li key={index}>{size}</li>
+              ))}
+            </ul>
+          </div>
+          <br />
+
+          <div>
+            <label>
+              Enter a color:
+              <br />
+              <input
+                type="text"
+                className="p-1 my-7 border-2 border-slate-400"
+                name="color"
+                placeholder="Black, ..."
+                value={newColor}
+                onChange={(e) => setNewColor(e.target.value)}
+              />
+            </label>
+            <br />
+            <button type="button" onClick={addColor}>
+              Add
+            </button>
+          </div>
+          <div>
+            <button type="button" onClick={() => setSelectedColors([])}>
+              Clear All
+            </button>
+          </div>
+          <div>
+            <strong>Selected Colors:</strong>
+            <ul>
+              {selectedColors.map((color, index) => (
+                <li key={index}>{color}</li>
+              ))}
+            </ul>
+          </div>
+          <br />
+
+          <div>
+            <h3>Product Features</h3>
+            <label>
+              Enter a feature:
+              <br />
+              <input
+                type="text"
+                className="p-1 my-7 border-2 border-slate-400"
+                name="feature"
+                value={newFeature}
+                onChange={(e) => setNewFeature(e.target.value)}
+              />
+            </label>
+            <br />
+            <button type="button" onClick={addFeature}>
+              Add
+            </button>
+            <br />
+            <button type="button" onClick={() => setFeatures([])}>
+              Clear All
+            </button>
+          </div>
+          <strong>Selected Features:</strong>
           <ul>
-            {selectedSizes.map((size, index) => (
-              <li key={index}>{size}</li>
+            {features.map((feature, index) => (
+              <li key={index}>{feature}</li>
             ))}
           </ul>
-        </div>
-        <br />
-
-        <div>
-          <label>
-            Enter a color:
-            <br />
-            <input
-              type="text"
-              className="p-1 my-7 border-2 border-slate-400"
-              name="color"
-              placeholder="Black, ..."
-              onChange={(e) => setNewColor(e.target.value)}
-            />
-          </label>
           <br />
-          <button type="button" onClick={addColor}>
-            Add
-          </button>
-        </div>
-        <div>
-          <button type="button" onClick={() => setSelectedColors([])}>
-            Clear All
-          </button>
-        </div>
-        <div>
-          <strong>Selected Colors:</strong>
-          <ul>
-            {selectedColors.map((color, index) => (
-              <li key={index}>{color}</li>
-            ))}
-          </ul>
-        </div>
-        <br />
-
-        <div>
-          <h3>Product Features</h3>
-          <label>
-            Enter a feature:
-            <br />
-            <input
-              type="text"
-              className="p-1 my-7 border-2 border-slate-400"
-              name="feature"
-              value={newFeature}
-              onChange={(e) => setNewFeature(e.target.value)}
-            />
-          </label>
-          <br />
-          <button type="button" onClick={addFeature}>
-            Add
-          </button>
-        </div>
-        <ul>
-          {features.map((feature, index) => (
-            <li key={index}>{feature}</li>
-          ))}
-        </ul>
-        <br />
-        <Button value="Update product" bg="bg-black" color="text-white" />
-      </form>
+          <Button value="Update product" bg="bg-black" color="text-white" />
+        </form>
+      </div>
     </div>
   );
 };

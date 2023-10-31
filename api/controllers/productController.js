@@ -2,6 +2,7 @@ import productModel from "../models/productModel.js";
 import orderModel from "../models/orderModel.js";
 import categoryModel from "../models/categoryModel.js";
 import reviewModel from "../models/reviewModel.js";
+import customizedModel from "../models/customizedModel.js";
 import cartModel from "../models/cartModel.js";
 import dotenv from "dotenv";
 import fs from "fs";
@@ -207,16 +208,18 @@ export const updateProductController = async (req, res) => {
       shipping,
       size,
       color,
-      feature,
+      features,
       subcategory,
       front,
       back,
+      isBestSelling,
     } = req.fields;
     const files = [front, back];
 
     if (!front || !back) {
       return res.status(400).send({ error: "Images are not correct" });
     }
+
     //validation
     switch (true) {
       case !name:
@@ -235,7 +238,7 @@ export const updateProductController = async (req, res) => {
         return res.status(500).send({ error: "Size is Required" });
       case !color:
         return res.status(500).send({ error: "Color is Required" });
-      case !feature:
+      case !features:
         return res.status(500).send({ error: "Features is Required" });
       case shipping == null:
         return res.status(500).send({ error: "Shipping is Required" });
@@ -243,7 +246,20 @@ export const updateProductController = async (req, res) => {
 
     const products = await productModel.findByIdAndUpdate(
       req.params.pid,
-      { ...req.fields, slug: slugify(name) },
+      {
+        name: name,
+        description: description,
+        isBestSelling: isBestSelling,
+        price: price,
+        category: category,
+        subcategory: subcategory,
+        shipping: shipping,
+        quantity: quantity,
+        size: size.split(","),
+        color: color.split(","),
+        features: features.split(","),
+        slug: slugify(name),
+      },
       { new: true }
     );
 
@@ -276,31 +292,45 @@ export const updateProductController = async (req, res) => {
 // filters
 export const productFiltersController = async (req, res) => {
   try {
-    const { checked, radio, subcategory } = req.body;
-    let prices = [];
+    const { checked, radio, subcategory, page } = req.body;
+    const perPage = 8;
     let args = {};
-    if (checked.length > 0) args.category = checked;
-    if (subcategory.length > 0) args.subcategory = subcategory;
-    if (radio.length) {
-      prices = radio.split(",");
-    }
-    args.price = {
-      $gte: parseInt(prices[0]),
-      $lte: parseInt(prices[1]),
-    };
 
-    const category = await categoryModel.findOne({ name: checked });
-    args.category = category;
-    const products = await productModel.find(args);
+    if (checked !== "all" && checked.length > 0) {
+      const category = await categoryModel.find({ name: checked });
+      args.category = category;
+    }
+
+    if (subcategory.length > 0) {
+      args.subcategory = subcategory;
+    }
+
+    if (typeof radio === "object" && radio.length === 2) {
+      if (radio[0] !== "all" && radio[1] !== "all") {
+        args.price = {
+          $gte: parseInt(radio[0]),
+          $lte: parseInt(radio[1]),
+        };
+      }
+    }
+
+    const skip = (page - 1) * perPage;
+    const limit = perPage;
+
+    const products = await productModel.find(args).skip(skip).limit(limit);
+
+    const total = await productModel.countDocuments(args);
+
     res.status(200).send({
       success: true,
       products,
+      total: total,
     });
   } catch (error) {
     console.log(error);
     res.status(400).send({
       success: false,
-      message: "Error WHile Filtering Products",
+      message: "Error While Filtering Products",
       error,
     });
   }
@@ -569,8 +599,18 @@ export const deleteCartProductController = async (req, res) => {
     const uid = decode._id;
     const { pid } = req.params;
     const cart = await cartModel.findOne({ user: uid });
-    cart.products = cart.products.filter((product) => product.product != pid);
-    cart.save();
+
+    // Find the index of the product with matching _id
+    const indexToRemove = cart.products.findIndex((product) => {
+      return product._id == pid; // Use == for loose equality check
+    });
+
+    if (indexToRemove !== -1) {
+      cart.products.splice(indexToRemove, 1);
+      await cart.save(); // Save the updated cart
+    }
+
+    // Send the remaining products in the response
     res.status(200).send({
       success: true,
       message: "Product deleted from cart",
@@ -608,14 +648,11 @@ export const clearCartController = async (req, res) => {
   }
 };
 
-// Controller function to get the count of products in the cart of a particular user
 export const getCartItemCount = async (req, res) => {
   try {
-    const userId = req.user._id; // Assuming you have a route parameter for the user ID
-
-    // Query the Cart model to count the number of items for the user
+    const userId = req.user._id;
     const cart = await cartModel.find({ user: userId });
-    const itemCount = cart[0].products.length;
+    const itemCount = cart ? cart[0]?.products.length : 0;
 
     res.status(200).json({ itemCount });
   } catch (error) {
@@ -628,12 +665,16 @@ export const getCartItemCount = async (req, res) => {
 
 export const customOrderController = async (req, res) => {
   try {
-    const { product, user, clothingDetails, buyerInfo } = req.body;
-    const order = new CustomizedOrder({
-      clothingDetails,
-      buyerInfo,
-      product,
-      buyer: user,
+    const { orderId, product, user, total, address, phone } = req.body;
+    const order = new customizedModel({
+      orderId,
+      product: product.product,
+      clothingDetails: product.clothingDetails,
+      buyer: user._id,
+      order_at_email: user.email,
+      total: total,
+      address: address,
+      phone: phone,
     });
     await order.save();
     res
@@ -651,7 +692,7 @@ export const customOrderController = async (req, res) => {
 
 export const getAllCustomOrderCOntroller = async (req, res) => {
   try {
-    const orders = await CustomizedOrder.find();
+    const orders = await customizedModel.find();
     res
       .status(200)
       .json({ success: true, orders })
@@ -675,7 +716,8 @@ export const getAllCustomOrderCOntroller = async (req, res) => {
 export const getCustomOrderCOntroller = async (req, res) => {
   try {
     const { id } = req.body;
-    const orders = await CustomizedOrder.findById(id)
+    const orders = await customizedModel
+      .findById(id)
       .populate({
         path: "product",
         populate: {
@@ -697,7 +739,8 @@ export const getCustomOrderCOntroller = async (req, res) => {
 export const getUserCustomOrderCOntroller = async (req, res) => {
   try {
     const { uid } = req.body;
-    const orders = await CustomizedOrder.find({ buyer: uid })
+    const orders = await customizedModel
+      .find({ buyer: uid })
       .populate({
         path: "product",
         populate: {
@@ -736,16 +779,42 @@ export const getProductsBySubcategoryId = async (req, res) => {
       return res.status(404).json({ error: "Subcategory not found" });
     }
 
+    const count = await productModel
+      .find({
+        subcategory: subcategory._id,
+      })
+      .countDocuments();
+
     const products = await productModel
       .find({ subcategory: subcategory._id })
       .skip((page - 1) * perPage)
       .limit(perPage)
       .sort({ createdAt: -1 });
 
-    res.status(200).json({ success: true, products: products });
+    res.status(200).json({ success: true, products: products, count: count });
   } catch (error) {
     res
       .status(500)
       .json({ error: "An error occurred while fetching products." });
+  }
+};
+
+export const getProductByIdController = async (req, res) => {
+  try {
+    const { productId } = req.params;
+
+    const product = await productModel.find({ _id: productId });
+
+    if (!product) {
+      res.status(404).send({ success: true, error: "Product not found" });
+    } else {
+      res.status(200).send({ success: true, product });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: true,
+      error: "An error occurred while fetching products.",
+    });
   }
 };

@@ -82,15 +82,6 @@ const Dashboard = () => {
           <Link href="/admin/manage-subcategory">
             <Card
               text="Subcategories"
-              color="bg-gradient-to-r from-amber-400 via-orange-400 to-red-400"
-              img="/category.png"
-            />
-          </Link>
-        )}
-        {authorized && (
-          <Link href="/">
-            <Card
-              text="Admins"
               color="bg-gradient-to-r from-purple-400 via-pink-400 to-red-400"
               img="/admin.png"
             />

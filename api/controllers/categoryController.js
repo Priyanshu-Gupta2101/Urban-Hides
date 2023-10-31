@@ -217,9 +217,9 @@ export const deleteSubcategory = async (req, res) => {
 
     await category.save(); // Save the updated category document
 
-    res.status(204).json({ error: "Delete successful" }); // Send a success response with no content
+    res.status(200).send({ success: true, error: "Delete successful" }); // Send a success response with no content
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Server error" });
+    res.status(500).send({ success: false, error: "Server error" });
   }
 };

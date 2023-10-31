@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/app/context/auth";
 import axiosInstance from "@/app/hooks/axiosinstance";
+import { useRouter } from "next/navigation";
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
@@ -13,14 +14,18 @@ const Orders = () => {
     phone: "",
   });
 
+  const router = useRouter();
+
   const getOrders = async () => {
     try {
-      const data = await axiosInstance.get(`/api/v1/auth/orders`, {
-        headers: {
-          Authorization: `Bearer ${auth?.token}`,
-        },
-      });
-      setOrders(data.data);
+      if (auth.token) {
+        const { data } = await axiosInstance.get(`/api/v1/auth/orders`, {
+          headers: {
+            Authorization: `Bearer ${auth?.token}`,
+          },
+        });
+        setOrders(data.orders);
+      }
     } catch (err) {
       console.log(err);
     }
@@ -28,20 +33,26 @@ const Orders = () => {
 
   const getUserDetails = async () => {
     try {
-      const data = await axiosInstance.get(`/api/v1/auth/user-details`, {
+      const { data } = await axiosInstance.get(`/api/v1/auth/user-details`, {
         headers: {
           Authorization: `Bearer ${auth?.token}`,
         },
       });
-      setUser(data.data.user[0]);
+      setUser(data.user[0]);
     } catch (error) {
       console.log(error);
     }
   };
+
   useEffect(() => {
     getUserDetails();
     getOrders();
   }, [auth]);
+
+  const viewOrderDetails = (orderId) => {
+    // Redirect to a page to view the order details
+    router.push(`/orders/${orderId}`);
+  };
 
   return (
     <div className={`p-8 md:p-20`}>
@@ -57,6 +68,7 @@ const Orders = () => {
               <th className="border-2 border-black">Ordered on</th>
               <th className="border-2 border-black">Quantity</th>
               <th className="border-2 border-black">Amount</th>
+              <th className="border-2 border-black">Details</th>
             </tr>
             {orders.map((order, index) => {
               return (
@@ -71,11 +83,18 @@ const Orders = () => {
                     {order.products.length}
                   </td>
                   <td className="border-2 border-black">
-                    Rs.{" "}
-                    {order.products.reduce(
-                      (total, curr) => total + curr.price,
-                      0
-                    )}
+                    {order.total?.toLocaleString("en-US", {
+                      style: "currency",
+                      currency: "USD",
+                    })}
+                  </td>
+                  <td className="border-2 border-black">
+                    <button
+                      onClick={() => viewOrderDetails(order._id)}
+                      className="bg-blue-500 text-white rounded p-2 hover:bg-blue-700"
+                    >
+                      View Details
+                    </button>
                   </td>
                 </tr>
               );

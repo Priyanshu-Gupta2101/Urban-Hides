@@ -11,6 +11,11 @@ import {
   sendOrderController,
   orderDetailsController,
   getAllUsersController,
+  getUserProfile,
+  sendOrderAfterPaypalController,
+  getSingleOrderController,
+  orderSetStatusController,
+  getUserOrdersController,
 } from "../controllers/authController.js";
 import { isAdmin, requireSignIn } from "../middlewares/authMiddleware.js";
 
@@ -41,6 +46,12 @@ router.get("/admin-auth", requireSignIn, isAdmin, (req, res) => {
 //orders
 router.get("/orders", requireSignIn, getOrdersController);
 
+//orders
+router.get("/orders/:orderId", requireSignIn, getSingleOrderController);
+
+//orders
+router.post("/user-orders", requireSignIn, isAdmin, getUserOrdersController);
+
 //all orders
 router.get("/all-orders", requireSignIn, isAdmin, getAllOrdersController);
 
@@ -50,16 +61,23 @@ router.get("/order/:orderId", requireSignIn, isAdmin, orderDetailsController);
 //user data
 router.get("/user-details", requireSignIn, getUserController);
 // order status update
-router.put(
-  "/order-status/:orderId",
-  requireSignIn,
-  isAdmin,
-  orderStatusController
-);
+router.post("/orders/capture", requireSignIn, orderStatusController);
 
 // Send order
 router.post("/send-order", requireSignIn, sendOrderController);
 
+// Send order
+router.post("/place-order", requireSignIn, sendOrderAfterPaypalController);
+
 router.get("/users", requireSignIn, isAdmin, getAllUsersController);
+
+router.get("/profile", requireSignIn, getUserProfile);
+
+router.put(
+  "/order-status/:orderId",
+  requireSignIn,
+  isAdmin,
+  orderSetStatusController
+);
 
 export default router;

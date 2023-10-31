@@ -5,19 +5,17 @@ import "../home.css";
 import axiosInstance from "../hooks/axiosinstance";
 import { Prices } from "../components/Prices";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 
 export default function Products() {
   const router = useRouter();
   // const [cart, setCart] = useCart();
   const [products, setProducts] = useState([]);
   const [checked, setChecked] = useState("");
-  const [radio, setRadio] = useState([]);
+  const [radio, setRadio] = useState("");
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState([]);
-  const [category, setCategory] = useState("");
   const [subcategory, setSubcategory] = useState("");
   const [subcategories, setSubcategories] = useState([]);
 
@@ -42,8 +40,14 @@ export default function Products() {
       const { data } = await axiosInstance.get(
         `/api/v1/product/product-list/${page}`
       );
-      setLoading(false);
-      setProducts(data.products);
+
+      if (page == 1) {
+        setLoading(false);
+        setProducts(data.products);
+      } else {
+        setLoading(false);
+        setProducts((prevProducts) => [...prevProducts, ...data.products]);
+      }
     } catch (error) {
       setLoading(false);
       console.log(error);
@@ -60,50 +64,41 @@ export default function Products() {
     }
   };
 
-  useEffect(() => {
-    if (page === 1) return;
-    loadMore();
-  }, [page]);
-  //load more
-  const loadMore = async () => {
-    try {
-      setLoading(true);
-      const { data } = await axiosInstance.get(
-        `/api/v1/product/product-list/${page}`
-      );
-      setLoading(false);
-      setProducts(...data?.products);
-    } catch (error) {
-      console.log(error);
-      setLoading(false);
-    }
-  };
-
   // filter by cat
   const handleFilter = (value, id) => {
     setChecked(value);
   };
-  useEffect(() => {
-    if (!checked.length || !radio.length || !subcategory.length)
-      getAllProducts();
-  }, [checked.length, radio.length, subcategory.length]);
-
-  useEffect(() => {
-    if (checked.length || radio.length || subcategory.length) filterProduct();
-  }, [checked, radio, subcategory]);
 
   //get filterd product
   const filterProduct = async () => {
+    const rad = Prices.find((price) => price.name === radio)?.array || [];
+
     try {
-      const { data } = await axiosInstance.post(
-        "/api/v1/product/product-filters",
-        {
-          checked,
-          radio,
-          subcategory,
-        }
-      );
-      setProducts(data.products);
+      if (page == 1) {
+        const { data } = await axiosInstance.post(
+          "/api/v1/product/product-filters",
+          {
+            checked,
+            radio: rad,
+            subcategory,
+            page,
+          }
+        );
+        setProducts(data.products);
+        setTotal(data.total);
+      } else {
+        const { data } = await axiosInstance.post(
+          "/api/v1/product/product-filters",
+          {
+            checked,
+            radio: rad,
+            subcategory,
+            page,
+          }
+        );
+        setProducts((prevProducts) => [...prevProducts, ...data.products]);
+        setTotal(data.total);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -117,7 +112,7 @@ export default function Products() {
   };
 
   const calculateDiscountedPrice = (originalPrice) => {
-    const discountedPrice = originalPrice - (originalPrice * 20) / 100;
+    const discountedPrice = originalPrice + (originalPrice * 20) / 100;
     return discountedPrice;
   };
 
@@ -132,19 +127,35 @@ export default function Products() {
     setSubcategory("");
   }, [checked, categories]);
 
+  useEffect(() => {
+    if (!checked.length || !radio.length || !subcategory.length)
+      getAllProducts();
+  }, [page]);
+
+  useEffect(() => {
+    if (checked.length || radio.length || subcategory.length) filterProduct();
+  }, [checked, radio, subcategory, page]);
+
   return (
     <>
-      <div className={`flex justify-around m-2`}>
+      <div className={`flex justify-around m-10 `}>
         <div className="d-flex flex-column">
           <select
             className="p-2 m-2 border-2 border-grey-300"
-            onChange={(e) => setRadio(e.target.value)}
+            value={radio}
+            onChange={(e) => {
+              setPage(1);
+              setRadio(e.target.value);
+            }}
           >
             <option value="" disabled>
               Select your option
             </option>
+            <option value="all" key={"price-all"}>
+              All
+            </option>
             {Prices?.map((p) => (
-              <option key={`price-${p._id}`} value={p.array}>
+              <option key={`price-${p._id}`} value={p.name}>
                 {p.name}
               </option>
             ))}
@@ -155,10 +166,16 @@ export default function Products() {
             name="categories-range"
             value={checked}
             className="p-2 m-2 border-2 border-grey-300"
-            onChange={(e) => handleFilter(e.target.value, e.target.key)}
+            onChange={(e) => {
+              setPage(1);
+              handleFilter(e.target.value, e.target.key);
+            }}
           >
             <option value="" disabled>
               Select your option
+            </option>
+            <option value="all" key={"category-all"}>
+              All
             </option>
             {categories.map((c) => (
               <option key={`category-${c._id}`} value={c.name}>
@@ -170,8 +187,11 @@ export default function Products() {
         <div>
           <select
             value={subcategory}
-            onChange={(e) => setSubcategory(e.target.value)}
-            className="p-2 m-2 border-2 border-grey-300"
+            onChange={(e) => {
+              setPage(1);
+              setSubcategory(e.target.value);
+            }}
+            className="p-2 m-2 border-2 border-300"
             disabled={!checked} // Disable if no category selected
           >
             <option value="" disabled>
@@ -223,19 +243,19 @@ export default function Products() {
                       />
                       <h6>{p.name}</h6>
                       <span className="line-through text-gray-500">
-                        {p.price.toLocaleString("en-US", {
-                          style: "currency",
-                          currency: "USD",
-                        })}
-                      </span>
-                      <span className="text-red-500">
                         {calculateDiscountedPrice(p.price).toLocaleString(
                           "en-US",
                           {
                             style: "currency",
                             currency: "USD",
                           }
-                        )}{" "}
+                        )}
+                      </span>
+                      <span className="text-red-500">
+                        {p.price.toLocaleString("en-US", {
+                          style: "currency",
+                          currency: "USD",
+                        })}{" "}
                         (20% off)
                       </span>
                     </div>
@@ -245,7 +265,7 @@ export default function Products() {
             ))}
           </div>
           <div className="m-2 p-3">
-            {products && products.length < total && (
+            {!products && products.length < total && (
               <button
                 className="btn loadmore"
                 onClick={(e) => {

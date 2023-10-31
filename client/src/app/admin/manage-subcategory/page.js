@@ -2,6 +2,8 @@
 import Button from "@/app/components/button";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/app/context/auth";
+import Flash from "@/app/components/flash";
+import showFlash from "@/app/utils/showFlash";
 
 const ManageSubCategory = () => {
   const [category, setCategory] = useState("");
@@ -10,6 +12,10 @@ const ManageSubCategory = () => {
   const [subcategory, setSubcategory] = useState("");
   const [subcategories, setSubcategories] = useState([]);
   const [auth] = useAuth();
+  const [flash, setFlash] = useState({
+    message: "",
+    bg: "",
+  });
 
   const createSubCategory = async (subcategory) => {
     setLoading(true);
@@ -27,7 +33,6 @@ const ManageSubCategory = () => {
       );
       const data = await response.json();
       setSubcategory("");
-      setCategory("");
       fetchCategories();
       setLoading(false);
     } catch (error) {
@@ -58,7 +63,7 @@ const ManageSubCategory = () => {
     setLoading(true);
 
     try {
-      const response = await fetch(
+      const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_PATH}api/v1/subcategory/delete/`,
         {
           method: "DELETE",
@@ -69,12 +74,27 @@ const ManageSubCategory = () => {
           body: JSON.stringify({ categoryId: cid, subcategoryId: subid }),
         }
       );
-      const data = await response.json();
 
-      fetchCategories();
-      setLoading(false);
+      const data = await res.json();
+
+      if (data.success) {
+        fetchCategories();
+        setLoading(false);
+
+        setFlash({
+          message: "Subcategory deleted successfully",
+          bg: "bg-green-500",
+        });
+      } else {
+        setFlash({
+          message: "Subcategory deleted unsuccessfully",
+          bg: "bg-green-500",
+        });
+      }
     } catch (err) {
       console.log(err);
+    } finally {
+      showFlash();
     }
   };
 
@@ -97,6 +117,7 @@ const ManageSubCategory = () => {
 
   return (
     <div className="py-12">
+      <Flash flash={flash} />
       <p className="text-3xl text-center">Manage Subcategory</p>
       <hr className="my-6 border-black" />
       <div className="grid place-items-center">
