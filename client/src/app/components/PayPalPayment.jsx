@@ -1,5 +1,5 @@
 import { PayPalButtons } from "@paypal/react-paypal-js";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useAuth } from "../context/auth";
 import { useRouter } from "next/navigation";
 import axiosInstance from "../hooks/axiosinstance";
@@ -55,22 +55,22 @@ const PayPalPayment = ({ custom, token, products, total, phone, address }) => {
       .then((response) => {
         return response.json();
       })
-      .then((data) => {
-        // return data.id;
-
-        const res = validateTransactionAndCaptureOrder(data.id);
-        if (!(res.status === 200)) {
-          return { success: false, message: "Validation failed" };
-        } else {
-          return data.id;
-        }
+      .then(async (data) => {
+        return data.id;
+        // const res = await validateTransactionAndCaptureOrder(data.id);
+        // console.log(res);
+        // if (!(res.status === 200)) {
+        //   return { success: false, message: "Validation failed" };
+        // } else {
+        //   return { id: data.id};
+        // }
       });
   };
 
   const validateTransactionAndCaptureOrder = async (trackingId) => {
     try {
       const response = await fetch(
-        `${process.env.BASE_PATH}/v1/risk/transaction-contexts/${process.env.NEXT_PUBLIC_MERCHANT_ID}/${trackingId}`,
+        `${process.env.NEXT_PUBLIC_BASE_PATH}/v1/risk/transaction-contexts/${process.env.NEXT_PUBLIC_MERCHANT_ID}/${trackingId}`,
         {
           method: "PUT",
           headers: {
@@ -86,7 +86,7 @@ const PayPalPayment = ({ custom, token, products, total, phone, address }) => {
     }
   };
 
-  const onApprove = async (id) => {
+  const onApprove = async ({ id }) => {
     return await fetch(
       `${process.env.NEXT_PUBLIC_API_PATH}api/v1/auth/orders/capture`,
       {
@@ -97,6 +97,7 @@ const PayPalPayment = ({ custom, token, products, total, phone, address }) => {
         },
         body: JSON.stringify({
           orderID: id.orderID.toString(),
+          // meta_id: paypal_client_meta_id.toString(),
         }),
       }
     )

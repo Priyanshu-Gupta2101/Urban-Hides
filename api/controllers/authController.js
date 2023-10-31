@@ -4,6 +4,7 @@ import { comparePassword, hashPassword } from "./../helpers/authHelper.js";
 import JWT from "jsonwebtoken";
 import fetch from "node-fetch";
 import dotenv from "dotenv";
+import { v4 as uuidv4 } from "uuid";
 
 dotenv.config();
 
@@ -502,6 +503,13 @@ const createOrder = async (products, user, total, address) => {
           },
         },
       ],
+      payment_source: {
+        paypal: {
+          experience_context: {
+            shipping_preference: "NO_SHIPPING",
+          },
+        },
+      },
 
       items: products,
     };
@@ -521,8 +529,13 @@ const createOrder = async (products, user, total, address) => {
   }
 };
 
+function generateUniqueId() {
+  return uuidv4();
+}
+
 const captureOrder = async (orderID) => {
   const accessToken = await generateAccessToken();
+  const uid = generateUniqueId();
   const url = `${process.env.BASE}/v2/checkout/orders/${orderID}/capture`;
 
   const response = await fetch(url, {
@@ -530,6 +543,7 @@ const captureOrder = async (orderID) => {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,
+      "PayPal-Request-Id": uid,
     },
   });
 

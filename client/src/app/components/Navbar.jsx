@@ -291,7 +291,7 @@ const Navbar = () => {
                         className="z-50 space-y-10 px-4 pb-8 pt-10"
                       >
                         <div className="grid grid-cols-2 gap-x-4">
-                          {category.featured.map((item) => (
+                          {/* {category.featured.map((item) => (
                             <div
                               key={item.name}
                               className="group relative text-sm"
@@ -317,7 +317,7 @@ const Navbar = () => {
                                 Shop now
                               </p>
                             </div>
-                          ))}
+                          ))} */}
                         </div>
                         {category.sections.map((section) => (
                           <div key={section.name}>
@@ -472,7 +472,7 @@ const Navbar = () => {
                                 <div className="mx-auto max-w-7xl px-8">
                                   <div className="grid grid-cols-2 gap-x-8 gap-y-10 py-16">
                                     <div className="col-start-2 grid grid-cols-2 gap-x-8">
-                                      {category.featured.map((item) => (
+                                      {/* {category.featured.map((item) => (
                                         <div
                                           key={item.name}
                                           className="group relative text-base sm:text-sm"
@@ -501,7 +501,7 @@ const Navbar = () => {
                                             Shop now
                                           </p>
                                         </div>
-                                      ))}
+                                      ))} */}
                                     </div>
                                     <div className="row-start-1 grid grid-cols-3 gap-x-8 gap-y-10 text-sm">
                                       {category.sections.map((section) => (
