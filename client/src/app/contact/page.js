@@ -41,10 +41,10 @@ export default function ContactForm() {
       <h1 className="text-2xl font-semibold">Contact Us</h1>
       <div className="mx-auto min-w-3xl px-6 py-4 my-10 md:flex">
         {/* Contact Details (Left Side) */}
-        <div className="w-1/2 pr-4 px-4">
+        <div className="w-[600px] pr-4 px-4">
           <p className="text-lg mt-2">
-            <a href="mailto:sales@urbanhides.com">
-              <AiOutlineMail /> info@urbanhides.com
+            <a href="mailto:info@www.urbanhides.com">
+              <AiOutlineMail /> info@www.urbanhides.com
             </a>
           </p>
           <div className="flex items-center mt-2">
@@ -62,11 +62,6 @@ export default function ContactForm() {
             <p className="text-lg">India: +91 98197 16095</p>
           </div>
         </div>
-
-        <div className="hidden md:block w-1/6"></div>
-        <div className="hidden md:block w-1/6"></div>
-        <div className="hidden md:block w-1/6"></div>
-        <div className="hidden md:block w-1/6"></div>
 
         {/* Contact Form (Right Side) */}
         <form onSubmit={handleSubmit} className="px-4 md:w-1/2 mt-4 md:mt-0">
