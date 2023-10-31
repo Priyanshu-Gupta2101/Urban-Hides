@@ -44,7 +44,7 @@ export default function Products() {
   return (
     <>
       <div className="container-fluid" id="best-seller">
-        {products.length() ? (
+        {products?.length ? (
           <div id="best-seller-row">
             <div
               className={`grid gap-10 grid-cols-1 md:grid-cols-2 lg:grid-cols-4`}
