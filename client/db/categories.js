@@ -26,7 +26,7 @@ export const categories = [
   {
     id: "5",
     name: "Dresses",
-    image: "./Dresses.jpg",
+    image: "./dresses.jpg",
     link: "/collections?category=Female&subcategory=Dresses",
   },
   {
