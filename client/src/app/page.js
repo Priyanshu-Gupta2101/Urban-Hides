@@ -71,7 +71,7 @@ export default function Home() {
         <div className="flex flex-col items-center">
           <h1 className="categories-heading my-7">Why choose us? </h1>
         </div>
-        <div className="grid gap-20 grid-cols-1 md:grid-cols-2 flex justify-center mx-20">
+        <div className="grid gap-10 md:grid-cols-2 justify-center mx-4 md:mx-20 mt-4">
           <BestThree />
         </div>
       </div>

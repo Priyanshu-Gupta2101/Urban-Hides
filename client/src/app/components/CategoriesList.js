@@ -1,12 +1,10 @@
-"use client";
 import { categories } from "../../../db/categories.js";
-
 import "../home.css";
 
 const CategoriesList = () => {
   return (
     <div className="min-w-full border-2" style={{ marginTop: "50px" }}>
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {categories.map((c) => {
           return (
             <a
@@ -14,8 +12,8 @@ const CategoriesList = () => {
               key={c.id}
               className="category border border-solid m-4 relative"
               style={{
-                width: "450px", // Set your fixed width here
-                height: "450px", // Set your desired height here
+                maxWidth: "100%", // Adjust the max width as needed
+                height: "100%",
                 display: "block",
                 overflow: "hidden",
               }}
@@ -23,7 +21,7 @@ const CategoriesList = () => {
               <img
                 src={c.image}
                 alt=""
-                className="img-fluid m-0 object-cover w-full h-full"
+                className="img-fluid m-0 object-cover w-full h-auto"
               />
               <div
                 className="text-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
@@ -37,7 +35,7 @@ const CategoriesList = () => {
                   className="text-white font-bold text-lg"
                   style={{
                     fontFamily: "Arial, sans-serif",
-                    fontSize: "2.5rem",
+                    fontSize: "1.5rem",
                   }}
                 >
                   {c.name}
