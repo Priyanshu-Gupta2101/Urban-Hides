@@ -51,29 +51,31 @@ const Login = (props) => {
   };
 
   return (
-    <div className="h-full">
+    <div className="xl:grid grid-cols-2 py-32 items-center justify-items-center gap-0 xl:px-64">
       <form
         onSubmit={onSubmit}
-        className="grid place-items-center md:mx-64 md:my-32 py-12 m-7 shadow-2xl"
+        className="grid place-items-center"
       >
-        <p className="text-2xl py-4">Login to Urbanhides</p>
+        <p className="text-2xl py-4 text-center">Login to Urbanhides</p>
         <hr />
         <input
-          className="p-1 my-4 border-2 border-slate-400"
+          className="p-1 my-4 border-2 border-slate-400 rounded-xl"
           type="email"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
         <input
-          className="p-1 my-7 border-2 border-slate-400"
+          className="p-1 my-7 border-2 border-slate-400 rounded-xl"
           type="password"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
+      <p className="text-slate-900 pb-4">Don't have an account? <a className="underline" href="/signup">Sign up</a></p>
         <Button value="Login" bg="bg-black" color="text-white" />
       </form>
+      <img src="https://designshack.net/wp-content/uploads/abstract-art-trend.png" alt="jacket-img" className="max-w-md hidden xl:block" />
     </div>
   );
 };
