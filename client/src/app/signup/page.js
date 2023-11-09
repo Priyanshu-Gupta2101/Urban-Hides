@@ -47,7 +47,7 @@ const Signup = (props) => {
     register();
   };
   return (
-    <div className="h-full max-w-lg px-8 mt-14 xl:grid grid-cols-2 place-items-center items-center justify-items-center lg:px-44 lg:py-10 xl:max-w-none lg:min-h-screen lg:items-start">
+    <div className="h-full max-w-lg px-8 mt-14 xl:grid grid-cols-2 place-items-center items-center justify-items-center lg:px-44 lg:py-24 xl:max-w-none lg:min-h-screen lg:items-start">
       <form
         onSubmit={onSubmit}
         className="md:mx-64 md:my-12 py-10 xl:py-0 lg:min-w-350"

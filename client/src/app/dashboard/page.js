@@ -51,12 +51,12 @@ const Dashboard = () => {
       </div>
     </div>
   ) : (
-    <div className="grid place-items-center md:py-44 py-32">
+    <div className="grid place-items-center py-32">
       <img
         src="https://cdni.iconscout.com/illustration/premium/thumb/greetings-6299746-5295068.png"
         alt="image"
       />
-      <p className="text-xl">
+      <p className="text-base">
         <a href="/login" className="text-blue-500">
           Login
         </a>{" "}
