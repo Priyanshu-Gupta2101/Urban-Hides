@@ -121,10 +121,16 @@ const Footer = () => {
               <Link href="/">UrbanHides</Link>
             </span>
           </div>
-          <div className="flex flex-center">
+          <div className="flex flex-center flex-col text-center">
             <span className="text-gray-600 text-sm ml-4">
               © Copyright 2023. All Rights Reserved
             </span>
+            <a
+              href="https://storyset.com/people"
+              className="text-gray-600 text-sm ml-4"
+            >
+              People illustrations by Storyset
+            </a>
           </div>
           <div className="flex items-center space-x-6">
             <FaCcVisa className="text-blue-500 text-4xl" />

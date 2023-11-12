@@ -47,37 +47,38 @@ const Signup = (props) => {
     register();
   };
   return (
-    <div className="h-full max-w-lg px-8 mt-14 xl:grid grid-cols-2 place-items-center items-center justify-items-center lg:px-44 lg:py-24 xl:max-w-none lg:min-h-screen lg:items-start">
-      <form
-        onSubmit={onSubmit}
-        className="md:mx-64 md:my-12 py-10 xl:py-0 lg:min-w-350"
-      >
-        <p className="text-2xl py-4">Sign Up to Urbanhides</p>
-        {page == 1 ? (
+    <div className="xl:grid grid-cols-2 py-44 items-center justify-items-center gap-0 xl:px-64">
+      <form onSubmit={onSubmit} className="grid place-items-center">
+        <p className="text-3xl py-4 text-center">Sign Up To Urbanhides</p>
+        {page == 1 && (
           <>
             <input
-              className="p-2 border-2 border-slate-400 rounded-xl mr-4"
+              className="p-1 my-4 border-2 border-slate-400 rounded-xl"
+              type="text"
+              placeholder="Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+            <input
+              className="p-1 my-4 border-2 border-slate-400 rounded-xl"
               type="email"
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
             <input
-              className="mt-2 p-2 border-2 border-slate-400 rounded-xl mr-4"
-              type="text"
-              placeholder="Name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              className="p-1 my-4 border-2 border-slate-400 rounded-xl"
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
-            <br />
-            <input
-              className="mt-2 p-2 border-2 border-slate-400 rounded-xl mb-4"
-              type="tel"
-              placeholder="Contactable Phone no."
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-            />
-            <br />
+            <p className="text-slate-900 pb-4">
+              Already have an account?{" "}
+              <a className="underline" href="/login">
+                Login
+              </a>
+            </p>
             <Button
               value="Next &rarr;"
               onClick={() => setPage(2)}
@@ -85,56 +86,47 @@ const Signup = (props) => {
               color="text-white"
             />
           </>
-        ) : (
+        )}
+        {page == 2 && (
           <>
-            <textarea
-              className="p-2 border-2 border-slate-400 rounded-xl"
-              placeholder="Shipping Address"
-              defaultValue={address}
-              onChange={(e) => setAddress(e.target.value)}
-            ></textarea>
-            <br />
             <input
-              className="p-2 mb-4 rounded-xl mt-2 border-2 border-slate-400"
-              type="password"
-              placeholder="Password"
-              value={password}
-              minlength="6"
-              onChange={(e) => {
-                setPassword(e.target.value);
-              }}
+              className="p-1 my-4 border-2 border-slate-400 rounded-xl"
+              type="number"
+              placeholder="Phone no."
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
             />
-            <br />
-            <label>
-              Enter an answer that you will use in case you want to reset your
-              password
+            <textarea
+              className="p-1 border-2 border-slate-400 rounded-xl"
+              placeholder="Address"
+            ></textarea>
+            <label for="answer" className="text-center mt-4 max-w-xs">
+              Enter a word that you can use to reset your password
             </label>
-            <br />
             <input
-              className="my-4 rounded-xl p-2 border-2 border-slate-400"
+              id="answer"
+              className="p-1 my-4 border-2 border-slate-400 rounded-xl"
               type="text"
-              placeholder="Security question"
               value={answer}
               onChange={(e) => setAnswer(e.target.value)}
             />
-            <br />
-            <Button
-              value="Back"
-              bg="bg-black"
-              onClick={() => setPage(1)}
-              color="text-white"
-            />
-            <Button value="Sign Up" bg="bg-black" color="text-white" />
+            <div>
+              <Button
+                value="&larr; Back"
+                bg="bg-black"
+                color="text-white"
+                onClick={() => setPage(1)}
+              />
+              <Button value="Sign Up" bg="bg-black" color="text-white" />
+            </div>
           </>
         )}
       </form>
-      <div className="rounded-xl mt-8 overflow-hidden">
-        <img
-          src="https://media.istockphoto.com/id/648366374/photo/handsome-traveler.jpg?s=612x612&w=0&k=20&c=LWiJBBBxEaWuwh9hLDNOYaZbJBO69nlUBu8bsPlycP8="
-          alt="jacket-img"
-          className="max-w-lg hidden xl:block"
-        />
-      </div>
+      <img
+        src="/sign-up-illustration.png"
+        alt="jacket-img"
+        className="max-w-md hidden xl:block"
+      />
     </div>
   );
 };
