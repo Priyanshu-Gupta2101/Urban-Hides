@@ -14,6 +14,7 @@ const Signup = (props) => {
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const [answer, setAnswer] = useState("");
+  const [page, setPage] = useState(1);
   const [flash, setFlash] = useState({
     message: "",
     bg: "",
@@ -46,63 +47,86 @@ const Signup = (props) => {
     register();
   };
   return (
-    <div className="h-full">
-      <form
-        onSubmit={onSubmit}
-        className="grid place-items-center md:mx-64 md:my-12 py-12  shadow-2xl shadow-black"
-      >
-        <p className="text-2xl py-4">Signup to Urbanhides</p>
-        <hr />
-        <input
-          className="p-1 my-4 border-2 border-slate-400"
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          className="p-1 my-4 border-2 border-slate-400"
-          type="text"
-          placeholder="Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-        <input
-          className="p-1 my-4 border-2 border-slate-400"
-          type="tel"
-          placeholder="Contactable Phone no."
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-        />
-        <textarea
-          className="p-1 my-4 border-2 border-slate-400"
-          placeholder="Shipping Address"
-          defaultValue={address}
-          onChange={(e) => setAddress(e.target.value)}
-        ></textarea>
-        <input
-          className="p-1 my-7 border-2 border-slate-400"
-          type="password"
-          placeholder="Password"
-          value={password}
-          minlength="6"
-          onChange={(e) => {
-            setPassword(e.target.value);
-          }}
-        />
-        <label className="my-2">
-          Enter an answer that you will use in case you want to reset your
-          password
-        </label>
-        <input
-          className="p-1 my-4 border-2 border-slate-400"
-          type="text"
-          placeholder="Security question"
-          value={answer}
-          onChange={(e) => setAnswer(e.target.value)}
-        />
-        <Button value="Login" bg="bg-black" color="text-white" />
+    <div className="xl:grid grid-cols-2 py-44 items-center justify-items-center gap-0 xl:px-64">
+      <form onSubmit={onSubmit} className="grid place-items-center">
+        <p className="text-3xl py-4 text-center">Sign Up To Urbanhides</p>
+        {page == 1 && (
+          <>
+            <input
+              className="p-1 my-4 border-2 border-slate-400 rounded-xl"
+              type="text"
+              placeholder="Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+            <input
+              className="p-1 my-4 border-2 border-slate-400 rounded-xl"
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <input
+              className="p-1 my-4 border-2 border-slate-400 rounded-xl"
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <p className="text-slate-900 pb-4">
+              Already have an account?{" "}
+              <a className="underline" href="/login">
+                Login
+              </a>
+            </p>
+            <Button
+              value="Next &rarr;"
+              onClick={() => setPage(2)}
+              bg="bg-black"
+              color="text-white"
+            />
+          </>
+        )}
+        {page == 2 && (
+          <>
+            <input
+              className="p-1 my-4 border-2 border-slate-400 rounded-xl"
+              type="number"
+              placeholder="Phone no."
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+            />
+            <textarea
+              className="p-1 border-2 border-slate-400 rounded-xl"
+              placeholder="Address"
+            ></textarea>
+            <label for="answer" className="text-center mt-4 max-w-xs">
+              Enter a word that you can use to reset your password
+            </label>
+            <input
+              id="answer"
+              className="p-1 my-4 border-2 border-slate-400 rounded-xl"
+              type="text"
+              value={answer}
+              onChange={(e) => setAnswer(e.target.value)}
+            />
+            <div>
+              <Button
+                value="&larr; Back"
+                bg="bg-black"
+                color="text-white"
+                onClick={() => setPage(1)}
+              />
+              <Button value="Sign Up" bg="bg-black" color="text-white" />
+            </div>
+          </>
+        )}
       </form>
+      <img
+        src="/sign-up-illustration.png"
+        alt="jacket-img"
+        className="max-w-md hidden xl:block"
+      />
     </div>
   );
 };

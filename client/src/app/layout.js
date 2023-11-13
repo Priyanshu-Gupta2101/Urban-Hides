@@ -64,7 +64,7 @@ export default function RootLayout({ children }) {
               <body className={inter.className}>
                 {renderNavbar && <Navbar />}
                 {/* <Sidebar /> */}
-                <div className="relative min-h-screen">
+                <div className="relative md:pb-32">
                   <div className="pb-15">{children}</div>
                 </div>
                 {renderNavbar && <Footer />}

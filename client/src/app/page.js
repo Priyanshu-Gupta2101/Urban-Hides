@@ -46,6 +46,20 @@ export default function Home() {
       <div className="p-7" id="categories">
         <CategoriesList />
       </div>
+      <div className="text-white text-xl my-24 mx-8 bg-gradient-to-r from-gray-500 to-gray-800 rounded-xl p-8">
+        <div>We make</div>
+        <div className="py-2">
+          <span className="text-4xl font-bold">
+            customized and tailormade jackets{" "}
+          </span>
+          <span className="text-2xl">just for you</span>
+        </div>
+        <div>
+          Choose from a variety of colors, sizes and options | Order customized
+          jackets for special occasions
+        </div>
+        <div>Wear the perfect jacket, without any compromises...</div>
+      </div>
       <div className="h-20"></div>
       <div className="p-5">
         <div id="ad1">

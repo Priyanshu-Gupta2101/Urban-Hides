@@ -51,16 +51,20 @@ const Dashboard = () => {
       </div>
     </div>
   ) : (
-    <div className="container h-screen flex justify-center items-center my-10">
-      <p>
-        You are not authorized to access this page. Goto{" "}
-        <a href="/login" className="text-blue-500 hover:text-light-blue-700">
-          Login page
+    <div className="grid place-items-center py-32">
+      <img
+        src="https://cdni.iconscout.com/illustration/premium/thumb/greetings-6299746-5295068.png"
+        alt="image"
+      />
+      <p className="text-base">
+        <a href="/login" className="text-blue-500">
+          Login
         </a>{" "}
-        to login or create a new account by{" "}
-        <a href="/signup" className="text-blue-500 hover:text-light-blue-700">
+        or{" "}
+        <a href="/signup" className="text-blue-500">
           Sign up
-        </a>
+        </a>{" "}
+        to view your dashboard.
       </p>
     </div>
   );

@@ -23,6 +23,7 @@ const CreateProduct = () => {
   const [auth, setAuth] = useAuth();
   const [selectedSizes, setSelectedSizes] = useState([]);
   const [selectedColors, setSelectedColors] = useState([]);
+  const [page, setPage] = useState(1);
 
   // Initialize state to store the list of features
   const [features, setFeatures] = useState([]);
@@ -114,6 +115,8 @@ const CreateProduct = () => {
 
   const handleFrontChange = (evt) => {
     if (evt.target.files) {
+      const frontImage = document.getElementById("front");
+      frontImage.src = URL.createObjectURL(evt.target.files[0]);
       const reader = new FileReader();
       reader.readAsDataURL(evt.target.files[0]);
       reader.onloadend = () => {
@@ -123,6 +126,8 @@ const CreateProduct = () => {
   };
   const handleBackChange = (evt) => {
     if (evt.target.files) {
+      const backImage = document.getElementById("back");
+      backImage.src = URL.createObjectURL(evt.target.files[0]);
       const reader = new FileReader();
       reader.readAsDataURL(evt.target.files[0]);
       reader.onloadend = () => {
@@ -144,194 +149,284 @@ const CreateProduct = () => {
     setSubcategory(""); // Reset subcategory when the category changes
   }, [category, categories]);
   return (
-    <div className="grid place-items-center py-12">
-      <p className="text-4xl">Create product</p>
+    <div className="grid place-items-center py-8">
+      <p className="text-4xl">Create Product</p>
       <form
-        className="md:w-96 my-4 [&>*]:my-4 p-6 shadow-2xl rounded"
+        className="my-8 [&>*]:my-4 p-4 md:min-w-600 md:p-8 rounded"
         encType="multipart/form-data"
         onSubmit={onSubmit}
       >
-        <label className="text-2xl">Select category</label>
-        <br />
-        <select value={category} onChange={(e) => setCategory(e.target.value)}>
-          <option value="" disabled>
-            Select your option
-          </option>
-          {categories.map((category) => {
-            return (
-              <option key={category._id} value={category._id}>
-                {category.name}
-              </option>
-            );
-          })}
-        </select>
-        <br />
-        {/* Subcategory select field */}
-        <label className="text-2xl">Select subcategory</label>
-        <br />
-        <select
-          value={subcategory}
-          onChange={(e) => setSubcategory(e.target.value)}
-          disabled={!category} // Disable if no category selected
-        >
-          <option value="" disabled>
-            Select your option
-          </option>
-          {subcategories.map((subcat) => (
-            <option key={subcat._id} value={subcat._id}>
-              {subcat.name}
-            </option>
-          ))}
-        </select>
-        <br />
-        <input
-          className="p-1 my-7 border-2 border-slate-400"
-          type="text"
-          placeholder="Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+        <div className="max-h-96 min-h-350 overflow-y-scroll border-y-2 py-4">
+          {page === 1 && (
+            <>
+              <p className="underline mb-4">Step 1</p>
+              <label className="text-2xl">Select category</label>
+              <br />
+              <select
+                className="my-4 p-2 rounded border-2 border-slate-400"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+              >
+                <option value="" disabled>
+                  Select your option
+                </option>
+                {categories.map((category) => {
+                  return (
+                    <option key={category._id} value={category._id}>
+                      {category.name}
+                    </option>
+                  );
+                })}
+              </select>
+              <br />
+              {/* Subcategory select field */}
+              <label className="text-2xl">Select subcategory</label>
+              <br />
+              <select
+                value={subcategory}
+                className="my-4 p-2 rounded border-2 border-slate-400"
+                onChange={(e) => setSubcategory(e.target.value)}
+                disabled={!category} // Disable if no category selected
+              >
+                <option value="" disabled>
+                  Select your option
+                </option>
+                {subcategories.map((subcat) => (
+                  <option key={subcat._id} value={subcat._id}>
+                    {subcat.name}
+                  </option>
+                ))}
+              </select>
+              <br />
+              <input
+                className="p-2 rounded border-2 border-slate-400"
+                type="text"
+                placeholder="Name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+              <br />
+              <textarea
+                className="p-2 rounded my-4 border-2 border-slate-400"
+                defaultValue={description}
+                placeholder="Write description of product"
+                onChange={(e) => setDescription(e.target.value)}
+              ></textarea>
+              <br />
+              <input
+                type="number"
+                className="p-2 rounded mb-4 border-2 border-slate-400"
+                placeholder="Price"
+                name="price"
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+              />
+              <br />
+            </>
+          )}
+          {page === 2 && (
+            <>
+              <p className="underline">Step 2</p>
+              <br />
+              <img
+                id="front"
+                src="/front.jpg"
+                className="w-40"
+                alt="Front image of product"
+              />
+              <br />
+              <label className="p-2 border-2 bg-slate-200 rounded">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFrontChange}
+                  className="hidden"
+                />
+                Front image of product | Click to upload
+              </label>
+              <br />
+              <img
+                id="back"
+                className="w-40 my-4"
+                src="/back.jpg"
+                alt="Back image of product"
+              />
+              <label className="p-2 border-2 bg-slate-200 rounded">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleBackChange}
+                  className="hidden"
+                />
+                Back image of product | Click to upload
+              </label>
+              <br />
+            </>
+          )}
+          {page === 3 && (
+            <>
+              <p className="underline">Step 3</p>
+              <input
+                type="number"
+                className="p-1 my-7 border-2 border-slate-400 rounded"
+                name="quantity"
+                placeholder="Quantity"
+                value={quantity}
+                onChange={(e) => setQuantity(e.target.value)}
+              />
+              <br />
+              <label>Shipping availiable?</label>
+              <br />
+              <select
+                className="p-1 my-4"
+                value={shipping}
+                onChange={(e) => setShipping(e.target.value)}
+              >
+                <option value="1">Yes</option>
+                <option value="0">No</option>
+              </select>
+              <br />
+
+              <label>Is Best Selling?</label>
+              <br />
+              <select
+                className="p-1 my-4"
+                value={isBestSelling}
+                onChange={(e) => setBestSelling(e.target.value)}
+              >
+                <option value="1">Yes</option>
+                <option value="0">No</option>
+              </select>
+              <br />
+
+              <div>
+                <label>
+                  Enter a size:
+                  <br />
+                  <input
+                    type="text"
+                    className="p-1 my-7 border-2 border-slate-400 rounded"
+                    name="size"
+                    placeholder="Small.."
+                    value={newSize}
+                    onChange={(e) => setNewSize(e.target.value)}
+                  />
+                </label>
+                <br />
+                <Button
+                  value="Add"
+                  onClick={addSize}
+                  bg="bg-green-500"
+                  color="text-white"
+                />
+                <Button
+                  value="Clear All"
+                  onClick={() => setSelectedSizes([])}
+                  bg="bg-red-500"
+                  color="text-white"
+                />
+              </div>
+              <div>
+                <strong>Selected Sizes:</strong>
+                <ul>
+                  {selectedSizes.map((size, index) => (
+                    <li key={index}>{size}</li>
+                  ))}
+                </ul>
+              </div>
+              <br />
+
+              <div>
+                <label>
+                  Enter a color:
+                  <br />
+                  <input
+                    type="text"
+                    className="p-1 my-7 border-2 border-slate-400 rounded"
+                    name="color"
+                    placeholder="Black, ..."
+                    value={newColor}
+                    onChange={(e) => setNewColor(e.target.value)}
+                  />
+                </label>
+                <br />
+                <Button
+                  value="Add"
+                  onClick={addColor}
+                  bg="bg-green-500"
+                  color="text-white"
+                />
+                <Button
+                  value="Clear All"
+                  onClick={() => setSelectedColors([])}
+                  bg="bg-red-500"
+                  color="text-white"
+                />
+              </div>
+              <div>
+                <strong>Selected Colors:</strong>
+                <ul>
+                  {selectedColors.map((color, index) => (
+                    <li key={index}>{color}</li>
+                  ))}
+                </ul>
+              </div>
+            </>
+          )}
+          {page === 4 && (
+            <>
+              <p className="underline">Step 4</p>
+              <div>
+                <h3 className="text-xl my-4">Product Features</h3>
+                <label>
+                  Enter a feature:
+                  <br />
+                  <input
+                    type="text"
+                    className="p-1 my-4 border-2 border-slate-400 rounded"
+                    name="feature"
+                    value={newFeature}
+                    onChange={(e) => setNewFeature(e.target.value)}
+                  />
+                </label>
+                <br />
+                <Button
+                  value="Add"
+                  onClick={addFeature}
+                  bg="bg-green-500"
+                  color="text-white"
+                />
+              </div>
+              <p className="my-4 text-xl">Added features</p>
+              <ul className="list-inside list-disc">
+                {features.map((feature, index) => (
+                  <li key={index}>{feature}</li>
+                ))}
+              </ul>
+              <br />
+            </>
+          )}
+        </div>
+        <Button
+          value="&larr; Back"
+          onClick={() => {
+            if (page > 1) {
+              setPage(page - 1);
+            }
+          }}
+          bg="bg-black"
+          color="text-white"
         />
-        <br />
-        <textarea
-          className="p-1 my-7 border-2 border-slate-400"
-          defaultValue={description}
-          placeholder="Write description of product"
-          onChange={(e) => setDescription(e.target.value)}
-        ></textarea>
-        <br />
-        <input
-          type="number"
-          className="p-1 my-7 border-2 border-slate-400"
-          placeholder="Price"
-          name="price"
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
+        <Button
+          value="Next &rarr;"
+          onClick={() => {
+            if (page < 4) {
+              setPage(page + 1);
+            }
+          }}
+          bg="bg-black"
+          color="text-white"
         />
-        <br />
-        <label>Add front image of product </label>
-        <input type="file" accept="image/*" onChange={handleFrontChange} />
-        <br />
-        <label>Add back image of product </label>
-        <input type="file" accept="image/*" onChange={handleBackChange} />
-        <br />
-        <input
-          type="number"
-          className="p-1 my-7 border-2 border-slate-400"
-          name="quantity"
-          placeholder="Quantity"
-          value={quantity}
-          onChange={(e) => setQuantity(e.target.value)}
-        />
-        <br />
-        <label>Shipping availiable?</label>
-        <br />
-        <select value={shipping} onChange={(e) => setShipping(e.target.value)}>
-          <option value="1">Yes</option>
-          <option value="0">No</option>
-        </select>
-        <br />
-
-        <label>Is Best Selling?</label>
-        <br />
-        <select
-          value={isBestSelling}
-          onChange={(e) => setBestSelling(e.target.value)}
-        >
-          <option value="1">Yes</option>
-          <option value="0">No</option>
-        </select>
-        <br />
-
-        <div>
-          <label>
-            Enter a size:
-            <br />
-            <input
-              type="text"
-              className="p-1 my-7 border-2 border-slate-400"
-              name="size"
-              placeholder="Small.."
-              value={newSize}
-              onChange={(e) => setNewSize(e.target.value)}
-            />
-          </label>
-          <br />
-          <button type="button" onClick={addSize}>
-            Add
-          </button>
-        </div>
-        <div>
-          <button type="button" onClick={() => setSelectedSizes([])}>
-            Clear All
-          </button>
-        </div>
-        <div>
-          <strong>Selected Sizes:</strong>
-          <ul>
-            {selectedSizes.map((size, index) => (
-              <li key={index}>{size}</li>
-            ))}
-          </ul>
-        </div>
-        <br />
-
-        <div>
-          <label>
-            Enter a color:
-            <br />
-            <input
-              type="text"
-              className="p-1 my-7 border-2 border-slate-400"
-              name="color"
-              placeholder="Black, ..."
-              value={newColor}
-              onChange={(e) => setNewColor(e.target.value)}
-            />
-          </label>
-          <br />
-          <button type="button" onClick={addColor}>
-            Add
-          </button>
-        </div>
-        <div>
-          <button type="button" onClick={() => setSelectedColors([])}>
-            Clear All
-          </button>
-        </div>
-        <div>
-          <strong>Selected Colors:</strong>
-          <ul>
-            {selectedColors.map((color, index) => (
-              <li key={index}>{color}</li>
-            ))}
-          </ul>
-        </div>
-        <br />
-
-        <div>
-          <h3>Product Features</h3>
-          <label>
-            Enter a feature:
-            <br />
-            <input
-              type="text"
-              className="p-1 my-7 border-2 border-slate-400"
-              name="feature"
-              value={newFeature}
-              onChange={(e) => setNewFeature(e.target.value)}
-            />
-          </label>
-          <br />
-          <button type="button" onClick={addFeature}>
-            Add
-          </button>
-        </div>
-        <ul>
-          {features.map((feature, index) => (
-            <li key={index}>{feature}</li>
-          ))}
-        </ul>
-        <br />
         <Button value="Create product" bg="bg-black" color="text-white" />
       </form>
     </div>
