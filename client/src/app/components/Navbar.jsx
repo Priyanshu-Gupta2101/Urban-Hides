@@ -402,7 +402,7 @@ const Navbar = () => {
       </Transition.Root>
 
       <header className="relative bg-white">
-        <marquee className="flex h-10 items-center bg-indigo-600 px-4 text-sm font-medium text-white sm:px-6 lg:px-8">
+        <marquee className="flex h-10 items-center bg-black px-4 text-sm font-medium text-white sm:px-6 lg:px-8">
           {" "}
           20% discount on all products | Halloween season is here checkout our
           latest collections | +1 323 284 6307 | info@www.urbanhides.com

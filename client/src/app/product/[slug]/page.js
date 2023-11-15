@@ -196,7 +196,7 @@ const Product = () => {
   return (
     <div className="mx-12 h-4/6 px-3 md:px-44 py-8">
       <Flash flash={flash} />
-      <div className="flex flex-row items-center justify-evenly gap-20 ml-4">
+      <div className="flex flex-col lg:flex-row items-center justify-evenly content-start  ml-4">
         {product.photo?.length > 0 && (
           <ImageSlider
             props={product?.photo}
@@ -204,14 +204,14 @@ const Product = () => {
           />
         )}
         <div className="font-sans py-14">
-          <p className="text-4xl py-2">{product.name}</p>
+          <p className="text-4xl font-bold py-2">{product.name}</p>
           <Star />
           <Star />
           <Star />
           <Star />
           <Star />
-          <p className="text-3xl py-2">
-            <span className="line-through text-red-500">
+          <p className="py-2">
+            <span className="text-xl line-through text-red-500">
               {calculateDiscountedPrice(product.price)?.toLocaleString(
                 "en-US",
                 {
@@ -221,7 +221,7 @@ const Product = () => {
               )}
             </span>
             <br />
-            <span className="text-gray-500">
+            <span className="text-3xl text-green-500">
               {product.price?.toLocaleString("en-US", {
                 style: "currency",
                 currency: "USD",
@@ -247,7 +247,7 @@ const Product = () => {
               return (
                 <button
                   key={p}
-                  className={`border-2 rounded p-3.5 mr-2.5 ${
+                  className={`border-2 rounded p-3 ${
                     color === p
                       ? "bg-black text-white border-white"
                       : "bg-white text-black border-black"
@@ -328,25 +328,27 @@ const Product = () => {
             name="quantity"
           />
           <br />
-          <label htmlFor="quantity" className="text-2xl mr-4">
-            Features:
-          </label>
-          <ul className="list-disc ml-6">
-            {product.features?.map((feature, index) => {
-              return <li key={index}>{`${feature}`}</li>;
-            })}
-          </ul>
-
-          <br />
-
-          <label htmlFor="quantity" className="text-2xl mr-4">
-            Description:
-          </label>
-          <br />
-          <p>{product.description}</p>
-          <br />
           <Button value="Add to cart" bg="bg-green-500" onClick={addToCart} />
         </div>
+      </div>
+      <div id="details">
+        <label htmlFor="quantity" className="text-2xl md:text-4xl mr-4">
+          Product Features:
+        </label>
+        <ul className="list-disc ml-6 my-6">
+          {product.features?.map((feature, index) => {
+            return <li key={index}>{`${feature}`}</li>;
+          })}
+        </ul>
+
+        <br />
+
+        <label htmlFor="quantity" className="text-2xl md:text-4xl mr-4">
+          Product Description:
+        </label>
+        <br />
+        <p className="my-6">{product.description}</p>
+        <br />
       </div>
       <div className="md:py-32">
         {/* <p className="text-3xl">

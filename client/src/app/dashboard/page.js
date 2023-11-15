@@ -52,11 +52,8 @@ const Dashboard = () => {
     </div>
   ) : (
     <div className="grid place-items-center py-32">
-      <img
-        src="https://cdni.iconscout.com/illustration/premium/thumb/greetings-6299746-5295068.png"
-        alt="image"
-      />
-      <p className="text-base">
+      <img src="/dashboard-nologin.png" alt="image" className="w-96" />
+      <p className="text-base my-4">
         <a href="/login" className="text-blue-500">
           Login
         </a>{" "}

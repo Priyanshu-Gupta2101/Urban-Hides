@@ -46,7 +46,7 @@ const Product = (props) => {
                 currency: "USD",
               })}
             </span>
-            <span className="text-red-500">
+            <span className="text-green-700">
               {calculateDiscountedPrice(props.price).toLocaleString("en-US", {
                 style: "currency",
                 currency: "USD",

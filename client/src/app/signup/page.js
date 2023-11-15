@@ -99,7 +99,10 @@ const Signup = (props) => {
             <textarea
               className="p-1 border-2 border-slate-400 rounded-xl"
               placeholder="Address"
-            ></textarea>
+              onChange={(e) => setAddress(e.target.value)}
+            >
+              {address}
+            </textarea>
             <label for="answer" className="text-center mt-4 max-w-xs">
               Enter a word that you can use to reset your password
             </label>

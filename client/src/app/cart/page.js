@@ -146,7 +146,7 @@ const CartPage = () => {
                         })}
                       </span>
                       <br />
-                      <span className="text-red-500">
+                      <span className="text-green-500">
                         {item.product.price?.toLocaleString("en-US", {
                           style: "currency",
                           currency: "USD",
@@ -208,7 +208,10 @@ const CartPage = () => {
                   <tr className="border-y-2">
                     <td className="py-2 font-bold">Total</td>
                     <td className="text-right font-bold">
-                      ${totalPrice() > 500 ? totalPrice() : totalPrice() + 35}
+                      $
+                      {totalPrice() > 500
+                        ? totalPrice().toFixed(2)
+                        : (totalPrice() + 35).toFixed(2)}
                     </td>
                   </tr>
                 </tbody>

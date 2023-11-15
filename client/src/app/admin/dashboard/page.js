@@ -41,9 +41,10 @@ const Dashboard = () => {
     );
   }
   return (
-    <div>
-      <p className="text-left text-3xl font-bold my-8 ml-6">Take a look</p>
-      <div className="grid grid-cols-1 md:grid-cols-3 mb-7 mx-4">
+    <div className="mx-4">
+      <p className="text-left text-2xl md:text-6xl my-8 ml-6">Dashboard</p>
+      <hr className="mb-4 hidden md:block" />
+      <div className="grid grid-cols-1 md:grid-cols-3 mb-7">
         {authorized && (
           <Link href="/admin/products">
             <Card
