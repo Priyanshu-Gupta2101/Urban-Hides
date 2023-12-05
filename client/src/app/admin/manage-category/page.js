@@ -2,6 +2,7 @@
 import Button from "@/app/components/button";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/app/context/auth";
+import { AiFillDelete } from "react-icons/ai";
 
 const ManageCategory = () => {
   const [categoryName, setCategoryName] = useState("");
@@ -134,13 +135,10 @@ const ManageCategory = () => {
                   className="text-center py-2 rounded"
                 />
                 <div className="flex">
-                  {/* <Button value="Save Edit" bg="bg-black" color="text-white" /> */}
-                  <Button
-                    value="Delete"
+                <AiFillDelete 
+                className="cursor-pointer"
                     onClick={() => deleteCategory(category._id)}
-                    bg="bg-red-500"
-                    color="text-white"
-                  />
+                size={35}/>
                 </div>
               </div>
             );

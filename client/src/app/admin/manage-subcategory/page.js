@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/app/context/auth";
 import Flash from "@/app/components/flash";
 import showFlash from "@/app/utils/showFlash";
+import { AiFillDelete } from "react-icons/ai";
 
 const ManageSubCategory = () => {
   const [category, setCategory] = useState("");
@@ -160,19 +161,18 @@ const ManageSubCategory = () => {
                         category.subcategories.map((subcategory) => {
                           return (
                             <td className="border">
-                              <span className="px-4">{subcategory.name}</span>
-                              <Button
-                                value="Delete"
+                              <span className="px-4 float-none">{subcategory.name}</span>
+                              <span className="float-right mr-2.5">
+                              <AiFillDelete 
+                              className="cursor-pointer"
                                 onClick={() =>
                                   deleteSubCategory(
                                     category._id,
                                     subcategory._id
                                   )
                                 }
-                                bg="bg-red-500"
-                                color="text-white"
-                                className="pl-4"
                               />
+                              </span>
                             </td>
                           );
                         })}

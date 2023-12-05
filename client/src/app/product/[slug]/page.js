@@ -13,6 +13,7 @@ import ImageSlider from "@/app/components/ImageSlider";
 import Link from "next/link";
 import { useCart } from "@/app/context/cart";
 
+
 const Product = () => {
   const [cart, setCart] = useCart();
   // const [reviewText, setReviewText] = useState("");
@@ -45,6 +46,7 @@ const Product = () => {
         `/api/v1/product/get-product/${params.slug}`
       );
       setProduct(data?.product);
+        setColor(data?.product.color[0]);
       getSimilarProduct(data?.product._id, data?.product.category._id);
     } catch (error) {
       console.log(error);
@@ -203,15 +205,15 @@ const Product = () => {
             className="rounded-xl md:min-w-350 md:max-w-xs self-center mt-4"
           />
         )}
-        <div className="font-sans py-14">
-          <p className="text-4xl font-bold py-2">{product.name}</p>
+        <div className="py-14">
+          <p className="font-bold text-4xl py-2">{product.name}</p>
           <Star />
           <Star />
           <Star />
           <Star />
           <Star />
           <p className="py-2">
-            <span className="text-xl line-through text-red-500">
+            <span className="text-xl line-through">
               {calculateDiscountedPrice(product.price)?.toLocaleString(
                 "en-US",
                 {
@@ -221,7 +223,7 @@ const Product = () => {
               )}
             </span>
             <br />
-            <span className="text-3xl text-green-500">
+            <span className="text-3xl font-bold text-green-500">
               {product.price?.toLocaleString("en-US", {
                 style: "currency",
                 currency: "USD",
@@ -230,8 +232,8 @@ const Product = () => {
             </span>
           </p>
 
-          <p className="text-xl py-2">Category : {product?.category?.name}</p>
-          <p className="text-xl py-2">
+          <p className="py-1 text-sm text-gray-500">Category : {product?.category?.name}</p>
+          <p className="text-gray-500 text-sm">
             Subcategory :{" "}
             {product.category?.subcategories.find(
               (subcategory) => subcategory._id === product.subcategory
