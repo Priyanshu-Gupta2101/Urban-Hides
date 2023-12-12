@@ -3,6 +3,8 @@ import Button from "@/app/components/button";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/app/context/auth";
 import { useRouter } from "next/navigation";
+import Flash from "@/app/components/flash";
+import showFlash from "@/app/utils/showFlash";
 
 const CreateProduct = () => {
   const router = useRouter();
@@ -24,6 +26,10 @@ const CreateProduct = () => {
   const [selectedSizes, setSelectedSizes] = useState([]);
   const [selectedColors, setSelectedColors] = useState([]);
   const [page, setPage] = useState(1);
+  const [flash, setFlash] = useState({
+    message: "",
+    bg: "",
+  });
 
   // Initialize state to store the list of features
   const [features, setFeatures] = useState([]);
@@ -82,8 +88,17 @@ const CreateProduct = () => {
         }
       );
       const data = await response.json();
-      router.push("/admin/products");
+        if (response.status === 201) {
+            router.push("/admin/products");
+        } else {
+            throw data;
+        }
     } catch (err) {
+        setFlash({
+            message: err.error,
+            bg: "bg-red-500",
+        });
+        showFlash();
       console.error(err);
     }
   };
@@ -150,6 +165,7 @@ const CreateProduct = () => {
   }, [category, categories]);
   return (
     <div className="grid place-items-center py-8">
+      <Flash flash={flash}/>
       <p className="text-4xl">Create Product</p>
       <form
         className="my-8 [&>*]:my-4 p-4 md:min-w-600 md:p-8 rounded"

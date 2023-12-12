@@ -5,6 +5,9 @@ import { useAuth } from "@/app/context/auth";
 import Flash from "@/app/components/flash";
 import showFlash from "@/app/utils/showFlash";
 import { AiFillDelete } from "react-icons/ai";
+import { Inter } from "next/font/google";
+
+const inter = Inter({subsets: ["latin"]});
 
 const ManageSubCategory = () => {
   const [category, setCategory] = useState("");
@@ -98,7 +101,7 @@ const ManageSubCategory = () => {
   }, []);
 
   return (
-    <div className="py-12">
+    <div className={"py-12 "+inter.className}>
       <Flash flash={flash} />
       <p className="text-3xl text-center">Manage Subcategory</p>
       <hr className="my-6 border-black" />
@@ -155,12 +158,12 @@ const ManageSubCategory = () => {
               {categories?.length > 0 &&
                 categories.map((category) => {
                   return (
-                    <tr>
+                    <tr key={category._id}>
                       <td className="py-8 font-bold border">{category.name}</td>
                       {category.subcategories?.length > 0 &&
                         category.subcategories.map((subcategory) => {
                           return (
-                            <td className="border">
+                            <td className="border" key={subcategory._id}>
                               <span className="px-4 float-none">{subcategory.name}</span>
                               <span className="float-right mr-2.5">
                               <AiFillDelete 

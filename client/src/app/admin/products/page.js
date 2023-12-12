@@ -8,6 +8,9 @@ import { Prices } from "@/app/components/Prices";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Button from "@/app/components/button";
+import { Inter } from "next/font/google";
+
+const inter = Inter({subsets: ['latin']})
 
 export default function Products() {
   const router = useRouter();
@@ -142,10 +145,12 @@ export default function Products() {
 
   return (
     <>
-      <div className={`flex justify-around m-10 `}>
+      <div className={`flex flex-col md:flex-row justify-around m-10 ${inter.className}`}>
+      <p className="my-2.5 text-gray-600">Filter by:</p>
         <div className="d-flex flex-column">
           <select
             className="p-2 m-2 border-2 border-grey-300"
+      placeholder="Select"
             value={radio}
             onChange={(e) => {
               setPage(1);
@@ -218,7 +223,7 @@ export default function Products() {
             className={`grid gap-10 grid-cols-1 md:grid-cols-2 lg:grid-cols-4`}
           >
             {products?.map((p) => (
-              <div className="container bg-white p-2" key={`product-${p._id}`}>
+              <div className="container bg-white" key={`product-${p._id}`}>
                 <div
                   className="relative"
                   onClick={() => {
@@ -234,7 +239,7 @@ export default function Products() {
                     </span>
                   )}
                   <div className="best-seller">
-                    <div className="flex flex-col items-center">
+                    <div className="py-4 flex flex-col items-center">
                       <img
                         className="img-fluid cursor-pointer"
                         src={`${process.env.NEXT_PUBLIC_CLOUDINARY_PATH}/${p?.photo[0]?.public_id}.jpg`}
@@ -243,7 +248,7 @@ export default function Products() {
                         sizes="max-width"
                         alt={p.name}
                       />
-                      <h6>{p.name}</h6>
+                      <h6 className="mt-4">{p.name}</h6>
                       <span className="line-through text-gray-500">
                         {calculateDiscountedPrice(p.price).toLocaleString(
                           "en-US",
@@ -253,7 +258,7 @@ export default function Products() {
                           }
                         )}
                       </span>
-                      <span className="text-red-500">
+                      <span className="text-green-600">
                         {p.price?.toLocaleString("en-US", {
                           style: "currency",
                           currency: "USD",
@@ -263,23 +268,19 @@ export default function Products() {
                     </div>
                   </div>
                 </div>
-                <button
-                  className="btn btn-dark ms-1"
+                <div className="flex justify-start my-4">
+                <Button
                   onClick={() => {
                     router.push(`update-product/${p.slug}`);
-                  }}
-                >
-                  Update
-                </button>
+                  }} value="Update" bg="bg-black" color="text-white"
+                />
                 <br />
-                <button
-                  className="btn btn-dark ms-1"
+                <Button
                   onClick={() => {
                     router.push(`delete-product/${p.slug}`);
-                  }}
-                >
-                  Delete
-                </button>
+                  }} value="Delete" bg="bg-black" color="text-white"
+                />
+                </div>
               </div>
             ))}
           </div>

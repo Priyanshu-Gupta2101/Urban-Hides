@@ -9,6 +9,11 @@
 - Protect admin route
 - How many subcategories (empty cells)
 - Search option for tables
+- Remove sizes, colors, features from product
+- Fix pricing display
+- Change the ugly 'new' icon
+- Make the chatbot smaller for mobile
+- Make navbar disappear after navigating
 
 ### Suggestions
 

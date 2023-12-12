@@ -125,7 +125,7 @@ const CartPage = () => {
               return (
                 <div
                   key={item._id}
-                  className="grid grid-cols-2 bg-slate-100 py-8 my-2 rounded"
+                  className="grid grid-cols-1 md:grid-cols-2 text-center bg-slate-100 py-8 my-2 rounded"
                 >
                   <div className="justify-self-center max-w-48">
                     <img
@@ -135,7 +135,7 @@ const CartPage = () => {
                     />
                   </div>
                   <div className="self-center">
-                    <p className="font-bold text-3xl">{item.product.name}</p>
+                    <p className="text-3xl mt-4">{item.product.name}</p>
                     <p className="text-2xl py-4">
                       <span className="line-through text-gray-500">
                         {calculateDiscountedPrice(

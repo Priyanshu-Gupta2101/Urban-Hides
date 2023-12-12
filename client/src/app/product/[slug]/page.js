@@ -223,7 +223,7 @@ const Product = () => {
               )}
             </span>
             <br />
-            <span className="text-3xl font-bold text-green-500">
+            <span className="text-2xl text-green-700">
               {product.price?.toLocaleString("en-US", {
                 style: "currency",
                 currency: "USD",
@@ -403,7 +403,7 @@ const Product = () => {
           >
             {relatedProducts?.map((p) => (
               <div
-                className="container bg-white p-2 border border-gray-400"
+                className="container bg-white"
                 key={`product-${p._id}`}
                 onClick={() => {
                   router.push(`/product/${p.slug}`);
@@ -435,7 +435,7 @@ const Product = () => {
                           currency: "USD",
                         })}
                       </span>
-                      <span className="text-red-500">
+                      <span className="text-green-500">
                         {calculateDiscountedPrice(p.price).toLocaleString(
                           "en-US",
                           {

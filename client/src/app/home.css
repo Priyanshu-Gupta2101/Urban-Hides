@@ -52,25 +52,19 @@
 }
 
 #best-seller-row {
-  background-color: #f1f5f8 !important;
   margin: 1rem;
   padding: 1rem;
 }
 
 .best-seller {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
+  /* margin-top: 1rem; */
+  /* margin-bottom: 1rem; */
 }
 
 .best-seller div {
   border-radius: 5px;
   transition: all 0.5s;
   height: 100%;
-}
-
-.best-seller div:hover {
-  transform: scale(1.02);
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
 .single-of-three h4 {
@@ -263,4 +257,15 @@
   #owner-info div {
     font-size: 0.9rem !important;
   }
+}
+
+/* new */
+
+#hero-div {
+    color: white;
+    background: url(/fp-model.webp),
+    radial-gradient(#444, #111);
+    background-blend-mode: multiply;
+    background-size: cover;
+    background-position-x: center;
 }
