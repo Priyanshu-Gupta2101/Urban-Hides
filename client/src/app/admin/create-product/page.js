@@ -3,6 +3,8 @@ import Button from "@/app/components/button";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/app/context/auth";
 import { useRouter } from "next/navigation";
+import Flash from "@/app/components/flash";
+import showFlash from "@/app/utils/showFlash";
 
 const CreateProduct = () => {
   const router = useRouter();
@@ -24,6 +26,10 @@ const CreateProduct = () => {
   const [selectedSizes, setSelectedSizes] = useState([]);
   const [selectedColors, setSelectedColors] = useState([]);
   const [page, setPage] = useState(1);
+  const [flash, setFlash] = useState({
+    message: "",
+    bg: "",
+  });
 
   // Initialize state to store the list of features
   const [features, setFeatures] = useState([]);
@@ -82,8 +88,17 @@ const CreateProduct = () => {
         }
       );
       const data = await response.json();
-      router.push("/admin/products");
+        if (response.status === 201) {
+            router.push("/admin/products");
+        } else {
+            throw data;
+        }
     } catch (err) {
+        setFlash({
+            message: err.error,
+            bg: "bg-red-500",
+        });
+        showFlash();
       console.error(err);
     }
   };
@@ -150,20 +165,20 @@ const CreateProduct = () => {
   }, [category, categories]);
   return (
     <div className="grid place-items-center py-8">
+      <Flash flash={flash}/>
       <p className="text-4xl">Create Product</p>
       <form
         className="my-8 [&>*]:my-4 p-4 md:min-w-600 md:p-8 rounded"
         encType="multipart/form-data"
-        onSubmit={onSubmit}
       >
-        <div className="max-h-96 min-h-350 overflow-y-scroll border-y-2 py-4">
+        <div className="max-h-96 min-h-350 overflow-y-scroll border-y-2 py-4 pl-1">
           {page === 1 && (
             <>
               <p className="underline mb-4">Step 1</p>
               <label className="text-2xl">Select category</label>
               <br />
               <select
-                className="my-4 p-2 rounded border-2 border-slate-400"
+                className="my-4 p-2 rounded border bg-gray-100"
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
               >
@@ -184,7 +199,7 @@ const CreateProduct = () => {
               <br />
               <select
                 value={subcategory}
-                className="my-4 p-2 rounded border-2 border-slate-400"
+                className="my-4 p-2 rounded border bg-gray-100"
                 onChange={(e) => setSubcategory(e.target.value)}
                 disabled={!category} // Disable if no category selected
               >
@@ -199,7 +214,7 @@ const CreateProduct = () => {
               </select>
               <br />
               <input
-                className="p-2 rounded border-2 border-slate-400"
+                className="p-2 rounded border bg-gray-100"
                 type="text"
                 placeholder="Name"
                 value={name}
@@ -207,7 +222,7 @@ const CreateProduct = () => {
               />
               <br />
               <textarea
-                className="p-2 rounded my-4 border-2 border-slate-400"
+                className="p-2 rounded my-4 border bg-gray-100"
                 defaultValue={description}
                 placeholder="Write description of product"
                 onChange={(e) => setDescription(e.target.value)}
@@ -215,7 +230,7 @@ const CreateProduct = () => {
               <br />
               <input
                 type="number"
-                className="p-2 rounded mb-4 border-2 border-slate-400"
+                className="p-2 rounded mb-4 border bg-gray-100"
                 placeholder="Price"
                 name="price"
                 value={price}
@@ -315,13 +330,19 @@ const CreateProduct = () => {
                 <br />
                 <Button
                   value="Add"
-                  onClick={addSize}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    addSize();
+                  }}
                   bg="bg-green-500"
                   color="text-white"
                 />
                 <Button
                   value="Clear All"
-                  onClick={() => setSelectedSizes([])}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setSelectedSizes([]);
+                  }}
                   bg="bg-red-500"
                   color="text-white"
                 />
@@ -352,13 +373,19 @@ const CreateProduct = () => {
                 <br />
                 <Button
                   value="Add"
-                  onClick={addColor}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    addColor();
+                  }}
                   bg="bg-green-500"
                   color="text-white"
                 />
                 <Button
                   value="Clear All"
-                  onClick={() => setSelectedColors([])}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setSelectedColors([]);
+                  }}
                   bg="bg-red-500"
                   color="text-white"
                 />
@@ -392,7 +419,10 @@ const CreateProduct = () => {
                 <br />
                 <Button
                   value="Add"
-                  onClick={addFeature}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    addFeature();
+                  }}
                   bg="bg-green-500"
                   color="text-white"
                 />
@@ -409,7 +439,8 @@ const CreateProduct = () => {
         </div>
         <Button
           value="&larr; Back"
-          onClick={() => {
+          onClick={(e) => {
+            e.preventDefault();
             if (page > 1) {
               setPage(page - 1);
             }
@@ -419,7 +450,8 @@ const CreateProduct = () => {
         />
         <Button
           value="Next &rarr;"
-          onClick={() => {
+          onClick={(e) => {
+            e.preventDefault();
             if (page < 4) {
               setPage(page + 1);
             }
@@ -427,7 +459,12 @@ const CreateProduct = () => {
           bg="bg-black"
           color="text-white"
         />
-        <Button value="Create product" bg="bg-black" color="text-white" />
+        <Button
+          value="Create product"
+          onClick={onSubmit}
+          bg="bg-black"
+          color="text-white"
+        />
       </form>
     </div>
   );

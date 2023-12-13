@@ -127,7 +127,7 @@ const Footer = () => {
             </span>
             <a
               href="https://storyset.com/people"
-              className="text-gray-600 text-sm ml-4"
+              className="text-gray-600 text-sm ml-4 my-1"
             >
               People illustrations by Storyset
             </a>

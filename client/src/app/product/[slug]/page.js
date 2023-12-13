@@ -13,6 +13,7 @@ import ImageSlider from "@/app/components/ImageSlider";
 import Link from "next/link";
 import { useCart } from "@/app/context/cart";
 
+
 const Product = () => {
   const [cart, setCart] = useCart();
   // const [reviewText, setReviewText] = useState("");
@@ -45,6 +46,7 @@ const Product = () => {
         `/api/v1/product/get-product/${params.slug}`
       );
       setProduct(data?.product);
+        setColor(data?.product.color[0]);
       getSimilarProduct(data?.product._id, data?.product.category._id);
     } catch (error) {
       console.log(error);
@@ -196,22 +198,22 @@ const Product = () => {
   return (
     <div className="mx-12 h-4/6 px-3 md:px-44 py-8">
       <Flash flash={flash} />
-      <div className="flex flex-row items-center justify-evenly gap-20 ml-4">
+      <div className="flex flex-col lg:flex-row items-center justify-evenly content-start  ml-4">
         {product.photo?.length > 0 && (
           <ImageSlider
             props={product?.photo}
             className="rounded-xl md:min-w-350 md:max-w-xs self-center mt-4"
           />
         )}
-        <div className="font-sans py-14">
-          <p className="text-4xl py-2">{product.name}</p>
+        <div className="py-14">
+          <p className="font-bold text-4xl py-2">{product.name}</p>
           <Star />
           <Star />
           <Star />
           <Star />
           <Star />
-          <p className="text-3xl py-2">
-            <span className="line-through text-red-500">
+          <p className="py-2">
+            <span className="text-xl line-through">
               {calculateDiscountedPrice(product.price)?.toLocaleString(
                 "en-US",
                 {
@@ -221,7 +223,7 @@ const Product = () => {
               )}
             </span>
             <br />
-            <span className="text-gray-500">
+            <span className="text-2xl text-green-700">
               {product.price?.toLocaleString("en-US", {
                 style: "currency",
                 currency: "USD",
@@ -230,8 +232,8 @@ const Product = () => {
             </span>
           </p>
 
-          <p className="text-xl py-2">Category : {product?.category?.name}</p>
-          <p className="text-xl py-2">
+          <p className="py-1 text-sm text-gray-500">Category : {product?.category?.name}</p>
+          <p className="text-gray-500 text-sm">
             Subcategory :{" "}
             {product.category?.subcategories.find(
               (subcategory) => subcategory._id === product.subcategory
@@ -247,7 +249,7 @@ const Product = () => {
               return (
                 <button
                   key={p}
-                  className={`border-2 rounded p-3.5 mr-2.5 ${
+                  className={`border-2 rounded p-3 ${
                     color === p
                       ? "bg-black text-white border-white"
                       : "bg-white text-black border-black"
@@ -328,25 +330,27 @@ const Product = () => {
             name="quantity"
           />
           <br />
-          <label htmlFor="quantity" className="text-2xl mr-4">
-            Features:
-          </label>
-          <ul className="list-disc ml-6">
-            {product.features?.map((feature, index) => {
-              return <li key={index}>{`${feature}`}</li>;
-            })}
-          </ul>
-
-          <br />
-
-          <label htmlFor="quantity" className="text-2xl mr-4">
-            Description:
-          </label>
-          <br />
-          <p>{product.description}</p>
-          <br />
           <Button value="Add to cart" bg="bg-green-500" onClick={addToCart} />
         </div>
+      </div>
+      <div id="details">
+        <label htmlFor="quantity" className="text-2xl md:text-4xl mr-4">
+          Product Features:
+        </label>
+        <ul className="list-disc ml-6 my-6">
+          {product.features?.map((feature, index) => {
+            return <li key={index}>{`${feature}`}</li>;
+          })}
+        </ul>
+
+        <br />
+
+        <label htmlFor="quantity" className="text-2xl md:text-4xl mr-4">
+          Product Description:
+        </label>
+        <br />
+        <p className="my-6">{product.description}</p>
+        <br />
       </div>
       <div className="md:py-32">
         {/* <p className="text-3xl">
@@ -399,7 +403,7 @@ const Product = () => {
           >
             {relatedProducts?.map((p) => (
               <div
-                className="container bg-white p-2 border border-gray-400"
+                className="container bg-white"
                 key={`product-${p._id}`}
                 onClick={() => {
                   router.push(`/product/${p.slug}`);
@@ -431,7 +435,7 @@ const Product = () => {
                           currency: "USD",
                         })}
                       </span>
-                      <span className="text-red-500">
+                      <span className="text-green-500">
                         {calculateDiscountedPrice(p.price).toLocaleString(
                           "en-US",
                           {

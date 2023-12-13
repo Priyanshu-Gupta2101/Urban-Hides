@@ -25,7 +25,8 @@ const Dashboard = () => {
   }, [auth?.token]);
   return auth?.token ? (
     <div>
-      <p className="text-left text-3xl font-bold my-8 ml-6">Take a look</p>
+      <p className="text-left text-2xl md:text-6xl my-8 ml-6">Dashboard</p>
+      <hr className="mb-4 hidden md:block" />
       <div className="grid grid-cols-1 md:grid-cols-3 mb-7 mx-4">
         <Link href="/orders">
           <Card
@@ -52,11 +53,8 @@ const Dashboard = () => {
     </div>
   ) : (
     <div className="grid place-items-center py-32">
-      <img
-        src="https://cdni.iconscout.com/illustration/premium/thumb/greetings-6299746-5295068.png"
-        alt="image"
-      />
-      <p className="text-base">
+      <img src="/dashboard-nologin.png" alt="image" className="w-96" />
+      <p className="text-base my-4">
         <a href="/login" className="text-blue-500">
           Login
         </a>{" "}

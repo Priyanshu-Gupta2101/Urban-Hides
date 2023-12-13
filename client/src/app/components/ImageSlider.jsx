@@ -36,20 +36,14 @@ export default function ImageSlider({ props }) {
   }, []);
 
   return (
-    <div className="border border-gray-500 p-6">
+    <div>
       <div
         ref={sliderRef}
         className=" md:min-w-350 md:max-w-xs self-center flex flex-row overflow-x-scroll snap-x snap-mandatory"
-        style={{
-          paddingBottom: "15px",
-        }}
       >
         {props.map((url) => {
           return (
-            <div
-              key={url.url}
-              className="w-full flex-shrink-0 snap-start border border-gray-300"
-            >
+            <div key={url.url} className="w-full flex-shrink-0 snap-start">
               <img src={url.url} />
             </div>
           );

@@ -34,3 +34,7 @@ npm i
 ```
 npm run dev
 ```
+
+## [Todos](Todo.md)
+
+- List of things to be done

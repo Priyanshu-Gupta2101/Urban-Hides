@@ -125,7 +125,7 @@ const CartPage = () => {
               return (
                 <div
                   key={item._id}
-                  className="grid grid-cols-2 bg-slate-100 py-8 my-2 rounded"
+                  className="grid grid-cols-1 md:grid-cols-2 text-center bg-slate-100 py-8 my-2 rounded"
                 >
                   <div className="justify-self-center max-w-48">
                     <img
@@ -135,7 +135,7 @@ const CartPage = () => {
                     />
                   </div>
                   <div className="self-center">
-                    <p className="font-bold text-3xl">{item.product.name}</p>
+                    <p className="text-3xl mt-4">{item.product.name}</p>
                     <p className="text-2xl py-4">
                       <span className="line-through text-gray-500">
                         {calculateDiscountedPrice(
@@ -146,7 +146,7 @@ const CartPage = () => {
                         })}
                       </span>
                       <br />
-                      <span className="text-red-500">
+                      <span className="text-green-500">
                         {item.product.price?.toLocaleString("en-US", {
                           style: "currency",
                           currency: "USD",
@@ -208,7 +208,10 @@ const CartPage = () => {
                   <tr className="border-y-2">
                     <td className="py-2 font-bold">Total</td>
                     <td className="text-right font-bold">
-                      ${totalPrice() > 500 ? totalPrice() : totalPrice() + 35}
+                      $
+                      {totalPrice() > 500
+                        ? totalPrice().toFixed(2)
+                        : (totalPrice() + 35).toFixed(2)}
                     </td>
                   </tr>
                 </tbody>

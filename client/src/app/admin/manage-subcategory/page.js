@@ -4,6 +4,10 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/app/context/auth";
 import Flash from "@/app/components/flash";
 import showFlash from "@/app/utils/showFlash";
+import { AiFillDelete } from "react-icons/ai";
+import { Inter } from "next/font/google";
+
+const inter = Inter({subsets: ["latin"]});
 
 const ManageSubCategory = () => {
   const [category, setCategory] = useState("");
@@ -37,25 +41,6 @@ const ManageSubCategory = () => {
       setLoading(false);
     } catch (error) {
       console.log(error);
-    }
-  };
-
-  const updateSubCategory = async (categoryName, id) => {
-    try {
-      const repsonse = await fetch(
-        `${process.env.NEXT_PUBLIC_API_PATH}api/v1/subcategory/update/${id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth.token}`,
-          },
-          body: JSON.stringify({ name: categoryName }),
-        }
-      );
-      const data = await repsonse.json();
-    } catch (err) {
-      console.log(err);
     }
   };
 
@@ -116,15 +101,19 @@ const ManageSubCategory = () => {
   }, []);
 
   return (
-    <div className="py-12">
+    <div className={"py-12 "+inter.className}>
       <Flash flash={flash} />
       <p className="text-3xl text-center">Manage Subcategory</p>
       <hr className="my-6 border-black" />
       <div className="grid place-items-center">
-        <p className="text-center">Create new subcategory</p>
-        <label className="text-2xl">Select category</label>
+        <p className="text-center text-2xl">Create new subcategory</p>
+        <label className="my-4">Select category</label>
         <br />
-        <select defaultValue="" onChange={(e) => setCategory(e.target.value)}>
+        <select
+          defaultValue=""
+          className="p-1 bg-gray-100 border-2 border-black"
+          onChange={(e) => setCategory(e.target.value)}
+        >
           <option value="" disabled>
             Select your option
           </option>
@@ -140,7 +129,7 @@ const ManageSubCategory = () => {
           type="text"
           value={subcategory}
           onChange={(e) => setSubcategory(e.target.value)}
-          className="border-2 border-black h-10 my-2.5"
+          className="border-2 border-black h-10 my-4"
         />
         <br />
         <Button
@@ -152,56 +141,50 @@ const ManageSubCategory = () => {
       </div>
       <hr className="my-6 border-black" />
       <div>
-        <p className="text-4xl py-7 text-center">Categories</p>
-        <p className="text-center text-gray-500 pb-4">
-          Click on the name to edit the category or press delete to delete it.
-        </p>
-        <div className="grid grid-cols-3 gap-5 py-3 place-items-center">
-          <p className="text-xl">Category</p>
-          <p className="text-xl">SubCategory</p>
+        <div className="overflow-x-scroll">
+          <p className="text-4xl py-7 text-center">Subcategories</p>
+          <p className="text-center text-gray-500 pb-4">
+            To change a subcategory, delete it and create a new one.
+          </p>
+          <table className="table-auto md:table-fixed w-full text-center my-4">
+            <tbody>
+              <tr className="md:text-xl">
+                <th className="py-4 border">Category name</th>
+                <th className="border">SubCategory 1</th>
+                <th className="border">SubCategory 2</th>
+                <th className="border">SubCategory 3</th>
+                <th className="border">SubCategory 4</th>
+              </tr>
+              {categories?.length > 0 &&
+                categories.map((category) => {
+                  return (
+                    <tr key={category._id}>
+                      <td className="py-8 font-bold border">{category.name}</td>
+                      {category.subcategories?.length > 0 &&
+                        category.subcategories.map((subcategory) => {
+                          return (
+                            <td className="border" key={subcategory._id}>
+                              <span className="px-4 float-none">{subcategory.name}</span>
+                              <span className="float-right mr-2.5">
+                              <AiFillDelete 
+                              className="cursor-pointer"
+                                onClick={() =>
+                                  deleteSubCategory(
+                                    category._id,
+                                    subcategory._id
+                                  )
+                                }
+                              />
+                              </span>
+                            </td>
+                          );
+                        })}
+                    </tr>
+                  );
+                })}
+            </tbody>
+          </table>
         </div>
-        {categories.length > 0 &&
-          categories.map((category) => {
-            return (
-              <div className="px-10 py-5">
-                <p>{category.name}</p>
-                <div
-                  key={category._id}
-                  className="grid grid-cols-3 gap-5 py-5 place-items-center"
-                >
-                  {category.subcategories &&
-                    category.subcategories.length > 0 &&
-                    category.subcategories.map((subcategory) => {
-                      return (
-                        <div key={subcategory._id}>
-                          <input
-                            type="text"
-                            defaultValue={subcategory.name}
-                            onChange={(e) =>
-                              updateSubCategory(e.target.value, category._id)
-                            }
-                            className="text-center py-2 rounded"
-                            key={subcategory._id}
-                          />
-                          <div>
-                            {/* <Button value="Save Edit" bg="bg-black" color="text-white" /> */}
-                            <Button
-                              value="Delete"
-                              onClick={() =>
-                                deleteSubCategory(category._id, subcategory._id)
-                              }
-                              bg="bg-red-500"
-                              color="text-white"
-                              className="pl-4"
-                            />
-                          </div>
-                        </div>
-                      );
-                    })}
-                </div>
-              </div>
-            );
-          })}
       </div>
     </div>
   );

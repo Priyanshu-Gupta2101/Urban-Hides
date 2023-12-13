@@ -47,7 +47,7 @@ const Signup = (props) => {
     register();
   };
   return (
-    <div className="xl:grid grid-cols-2 py-44 items-center justify-items-center gap-0 xl:px-64">
+    <div className="xl:grid grid-cols-2 py-24 items-center justify-items-center gap-0 xl:px-64">
       <form onSubmit={onSubmit} className="grid place-items-center">
         <p className="text-3xl py-4 text-center">Sign Up To Urbanhides</p>
         {page == 1 && (
@@ -99,7 +99,10 @@ const Signup = (props) => {
             <textarea
               className="p-1 border-2 border-slate-400 rounded-xl"
               placeholder="Address"
-            ></textarea>
+              onChange={(e) => setAddress(e.target.value)}
+            >
+              {address}
+            </textarea>
             <label for="answer" className="text-center mt-4 max-w-xs">
               Enter a word that you can use to reset your password
             </label>
