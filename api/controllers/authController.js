@@ -16,19 +16,19 @@ export const registerController = async (req, res) => {
       return res.status(400).send({ error: "Name is Required" });
     }
     if (!email) {
-      return res.status(400).send({ message: "Email is Required" });
+      return res.status(400).send({ error: "Email is Required" });
     }
     if (!password) {
-      return res.status(400).send({ message: "Password is Required" });
+      return res.status(400).send({ error: "Password is Required" });
     }
     if (!phone) {
-      return res.status(400).send({ message: "Phone no is Required" });
+      return res.status(400).send({ error: "Phone no is Required" });
     }
     if (!address) {
-      return res.status(400).send({ message: "Address is Required" });
+      return res.status(400).send({ error: "Address is Required" });
     }
     if (!answer) {
-      return res.status(400).send({ message: "Answer is Required" });
+      return res.status(400).send({ error: "Answer is Required" });
     }
 
     if (password && password.length < 6) {
@@ -43,7 +43,7 @@ export const registerController = async (req, res) => {
     if (exisitingUser) {
       return res.status(400).send({
         success: false,
-        message: "Already Register please login",
+        error: "Already Register please login",
       });
     }
     //register user

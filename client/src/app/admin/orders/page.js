@@ -42,7 +42,7 @@ const Orders = () => {
       <p className="mb-10 text-4xl">Orders</p>
 
       <div className="grid overflow-x-scroll max-w-full py-12">
-        <table className="border-2 border-black text-center">
+      { orders.length > 0 ?         <table className="border-2 border-black text-center">
           <tbody>
             <tr className="border-2 border-black">
               <th className="border-2 border-black p-4">Sr no.</th>
@@ -76,6 +76,8 @@ const Orders = () => {
             })}
           </tbody>
         </table>
+      : <p className="text-xl text-gray-600">No orders yet</p>
+      }
       </div>
     </div>
   );

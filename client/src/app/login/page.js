@@ -5,12 +5,19 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../context/auth";
 import axiosInstance from "../hooks/axiosinstance";
+import showFlash from "../utils/showFlash";
+import Flash from "../components/flash";
+
 const Login = (props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
   const [auth, setAuth] = useAuth();
   const [cart, setCart] = useCart();
+    const [flash, setFlash] = useState({
+        "message": "",
+        "bg": ""
+    });
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -30,11 +37,15 @@ const Login = (props) => {
 
         getCartItem(data);
         localStorage.setItem("auth", JSON.stringify(data));
+        router.push("/");
       }
     } catch (error) {
       console.error(error);
-    } finally {
-      router.push("/");
+        setFlash({
+            "message": "Invalid credentials",
+            "bg": "bg-red-500"
+        });
+        showFlash();
     }
   };
 
@@ -52,6 +63,7 @@ const Login = (props) => {
 
   return (
     <div className="xl:grid grid-cols-2 py-24 items-center justify-items-center gap-0 xl:px-64">
+      <Flash flash={flash} />
       <form onSubmit={onSubmit} className="grid place-items-center">
         <p className="text-3xl my-8 text-center">Login to UrbanHides</p>
         <hr />

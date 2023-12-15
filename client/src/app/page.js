@@ -40,9 +40,9 @@ export default function Home() {
 
     return (
         <div className="mx-4">
-            <section id="hero" className="mt-10 mb-32">
-                <div id="hero-div" className="text-center py-56 px-4">
-                    <div className="my-0 mx-auto max-w-2xl">
+            <section id="hero" className="mb-32">
+                <div id="hero-div" className="px-4 py-56 text-center">
+                    <div className="mx-auto my-0 max-w-2xl">
                         <p className="text-5xl font-bold">
                             Discover Premium Leatherware for Every Occasion
                         </p>
@@ -62,10 +62,10 @@ export default function Home() {
                 </div>
             </section>
             <section id="customization my-32">
-                <div className="flex flex-col lg:flex-row justify-evenly">
+                <div className="flex flex-col justify-evenly lg:flex-row">
                     <div className="max-w-xl">
                         <p className="underline">Custom made</p>
-                        <p className="text-5xl font-bold my-2">
+                        <p className="my-2 text-5xl font-bold">
                             We take your needs to heart
                         </p>
                         <p className="my-2">
@@ -76,12 +76,16 @@ export default function Home() {
                             of genuine leather that stands the test of time.
                         </p>
                         <div className="my-6">
-                        <Button value="Shop" color="text-white" bg="bg-black" />
-                        <Button
-                            value="Learn More"
-                            color="text-white"
-                            bg="bg-black"
-                        />
+                            <Button
+                                value="Shop"
+                                color="text-white"
+                                bg="bg-black"
+                            />
+                            <Button
+                                value="Learn More"
+                                color="text-white"
+                                bg="bg-black"
+                            />
                         </div>
                     </div>
                     <div className="self-center">
@@ -90,16 +94,16 @@ export default function Home() {
                 </div>
             </section>
             <section>
-                <div className="text-center py-32">
+                <div className="py-32 text-center">
                     <p className="text-5xl font-bold">Browse Categories</p>
-                    <div className="flex flex-wrap justify-evenly my-32 gap-10">
+                    <div className="my-32 flex flex-wrap justify-evenly gap-10">
                         <div
                             style={{
                                 background: `url(/Biker.jpg), radial-gradient(#888, #666)`,
                                 backgroundBlendMode: "multiply",
                                 backgroundSize: "cover",
                             }}
-                            className="text-white w-64 h-64 flex justify-center items-center rounded hover:scale-110 duration-500"
+                            className="flex h-64 w-64 items-center justify-center rounded text-white duration-500 hover:scale-110"
                         >
                             <span>Biker Jackets</span>
                         </div>
@@ -109,7 +113,7 @@ export default function Home() {
                                 backgroundBlendMode: "multiply",
                                 backgroundSize: "cover",
                             }}
-                            className="text-white w-64 h-64 flex justify-center items-center rounded hover:scale-110 duration-500"
+                            className="flex h-64 w-64 items-center justify-center rounded text-white duration-500 hover:scale-110"
                         >
                             <span>Coats</span>
                         </div>
@@ -119,7 +123,7 @@ export default function Home() {
                                 backgroundBlendMode: "multiply",
                                 backgroundSize: "cover",
                             }}
-                            className="text-white w-64 h-64 flex justify-center items-center rounded hover:scale-110 duration-500"
+                            className="flex h-64 w-64 items-center justify-center rounded text-white duration-500 hover:scale-110"
                         >
                             <span>Skirts</span>
                         </div>
@@ -129,7 +133,7 @@ export default function Home() {
                                 backgroundBlendMode: "multiply",
                                 backgroundSize: "cover",
                             }}
-                            className="text-white w-64 h-64 flex justify-center items-center rounded hover:scale-110 duration-500"
+                            className="flex h-64 w-64 items-center justify-center rounded text-white duration-500 hover:scale-110"
                         >
                             <span>Bags</span>
                         </div>
@@ -159,7 +163,7 @@ export default function Home() {
                                 Bestselling leatherware products.
                             </p>
                             <button
-                                className="hidden md:block p-2 rounded bg-white text-black border-2 border-black"
+                                className="hidden rounded border-2 border-black bg-white p-2 text-black md:block"
                                 onClick={() => router.push("/product")}
                             >
                                 View all
@@ -168,7 +172,7 @@ export default function Home() {
                     </div>
                     <div
                         ref={ref}
-                        className="flex md:flex-row gap-10 overflow-hidden scroll-smooth"
+                        className="flex gap-10 overflow-hidden scroll-smooth md:flex-row"
                         id="best-seller-row"
                     >
                         <BestSellersList />

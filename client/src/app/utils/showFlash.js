@@ -4,7 +4,7 @@ export default function showFlash() {
     setTimeout(() => {
       if (document?.getElementById("flash"))
         document.getElementById("flash").style.top = "-112px";
-    }, 2000);
+    }, 4000);
   } catch (error) {
     console.error(error);
   }
