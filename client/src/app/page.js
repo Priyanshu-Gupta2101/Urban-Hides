@@ -39,7 +39,7 @@ export default function Home() {
     };
 
     return (
-        <div className="mx-4">
+        <div className="mx-4 lg:mx-0">
             <section id="hero" className="mb-32">
                 <div id="hero-div" className="px-4 py-56 text-center">
                     <div className="mx-auto my-0 max-w-2xl">
@@ -53,22 +53,22 @@ export default function Home() {
                             everyone.
                         </p>
                     </div>
-                    <Button value="Shop" color="text-white" bg="bg-black" />
-                    <Button
-                        value="Learn More"
-                        color="text-white"
-                        bg="bg-black"
-                    />
+                    <button className="hover:bg-gray-950 duration-500 mr-2 rounded border-2 border-white bg-black p-4 text-white">
+                        Shop
+                    </button>
+                    <button className="hover:bg-gray-950 duration-500 rounded border-2 border-white bg-black p-4 text-white">
+                        Learn more
+                    </button>
                 </div>
             </section>
             <section id="customization my-32">
-                <div className="flex flex-col justify-evenly lg:flex-row">
-                    <div className="max-w-xl">
+                <div className="flex flex-col justify-evenly gap-5 md:flex-row">
+                    <div>
                         <p className="underline">Custom made</p>
                         <p className="my-2 text-5xl font-bold">
                             We take your needs to heart
                         </p>
-                        <p className="my-2">
+                        <p className="my-2 max-w-xl">
                             Order custom made leatherware without restriction on
                             it's color or size! Our leather products are
                             meticulously handcrafted using the finest materials,
@@ -76,16 +76,14 @@ export default function Home() {
                             of genuine leather that stands the test of time.
                         </p>
                         <div className="my-6">
-                            <Button
-                                value="Shop"
-                                color="text-white"
-                                bg="bg-black"
-                            />
-                            <Button
-                                value="Learn More"
-                                color="text-white"
-                                bg="bg-black"
-                            />
+                            <button className="hover:bg-gray-950 mr-2 rounded border-2 border-white bg-black p-4 text-white duration-500">
+                                Shop
+                            </button>
+                            <button
+                                className="hover:bg-gray-950 rounded border-2 border-white bg-black p-4 text-white duration-500"
+                            >
+                                Learn more
+                            </button>
                         </div>
                     </div>
                     <div className="self-center">
@@ -146,16 +144,6 @@ export default function Home() {
                         <p className="underline">Discover</p>
                         <div className="my-4 flex flex-row justify-between">
                             <p className="text-5xl font-bold">Featured</p>
-                            <div className="flex">
-                                <FaAngleLeft
-                                    size={35}
-                                    onClick={() => scroll("left")}
-                                />
-                                <FaAngleRight
-                                    size={35}
-                                    onClick={() => scroll("right")}
-                                />
-                            </div>
                         </div>
                         <div className="flex flex-row justify-between">
                             <p className="text-xl">
@@ -163,11 +151,23 @@ export default function Home() {
                                 Bestselling leatherware products.
                             </p>
                             <button
-                                className="hidden rounded border-2 border-black bg-white p-2 text-black md:block"
+                                className="hover:bg-black hover:text-white duration-500 hidden rounded border-2 border-black bg-white p-2 text-black md:block"
                                 onClick={() => router.push("/product")}
                             >
                                 View all
                             </button>
+                        </div>
+                        <div className="my-4 flex">
+                            <FaAngleLeft
+                                size={35}
+                                color="gray"
+                                onClick={() => scroll("left")}
+                            />
+                            <FaAngleRight
+                                size={35}
+                                color="gray"
+                                onClick={() => scroll("right")}
+                            />
                         </div>
                     </div>
                     <div
