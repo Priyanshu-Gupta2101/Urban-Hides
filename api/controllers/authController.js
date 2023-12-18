@@ -533,7 +533,15 @@ function generateUniqueId() {
   return uuidv4();
 }
 
-const captureOrder = async (orderID) => {
+export const validateOrderController = async (req, res) => {
+  try {
+    const { trackingId } = req.body;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const captureOrder = async (orderID, meta_id) => {
   const accessToken = await generateAccessToken();
   const uid = generateUniqueId();
   const url = `${process.env.BASE}/v2/checkout/orders/${orderID}/capture`;
@@ -544,6 +552,7 @@ const captureOrder = async (orderID) => {
       "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,
       "PayPal-Request-Id": uid,
+      "PayPal-Client-Metadata-Id": meta_id,
     },
   });
 
@@ -581,8 +590,11 @@ export const sendOrderController = async (req, res) => {
 
 export const orderStatusController = async (req, res) => {
   try {
-    const { orderID } = req.body;
-    const { jsonResponse, httpStatusCode } = await captureOrder(orderID);
+    const { orderID, meta_id } = req.body;
+    const { jsonResponse, httpStatusCode } = await captureOrder(
+      orderID,
+      meta_id
+    );
     res.status(httpStatusCode).json(jsonResponse);
   } catch (error) {
     console.error("Failed to create order:", error);

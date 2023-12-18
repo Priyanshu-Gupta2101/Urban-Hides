@@ -56,26 +56,29 @@ const PayPalPayment = ({ custom, token, products, total, phone, address }) => {
         return response.json();
       })
       .then(async (data) => {
-        return data.id;
-        // const res = await validateTransactionAndCaptureOrder(data.id);
-        // console.log(res);
-        // if (!(res.status === 200)) {
-        //   return { success: false, message: "Validation failed" };
-        // } else {
-        //   return { id: data.id};
-        // }
+        // return data.id;
+        const uniqueKey = Date.now().toString();
+        const res = await validateTransactionAndCaptureOrder(uniqueKey);
+        if (!(res.status === 200)) {
+          return { success: false, message: "Validation failed" };
+        } else {
+          return { id: data.id, meta_id: uniqueKey };
+        }
       });
   };
 
   const validateTransactionAndCaptureOrder = async (trackingId) => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_PATH}/v1/risk/transaction-contexts/${process.env.NEXT_PUBLIC_MERCHANT_ID}/${trackingId}`,
+        `${process.env.NEXT_PUBLIC_API_PATH}api/v1/auth/validate`,
         {
-          method: "PUT",
+          method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
+          body: JSON({
+            "trackingId": trackingId,
+          }),
         }
       );
 
@@ -86,7 +89,7 @@ const PayPalPayment = ({ custom, token, products, total, phone, address }) => {
     }
   };
 
-  const onApprove = async ({ id }) => {
+  const onApprove = async ({ id, meta_id }) => {
     return await fetch(
       `${process.env.NEXT_PUBLIC_API_PATH}api/v1/auth/orders/capture`,
       {
@@ -96,8 +99,8 @@ const PayPalPayment = ({ custom, token, products, total, phone, address }) => {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          orderID: id.orderID.toString(),
-          // meta_id: paypal_client_meta_id.toString(),
+          orderID: id.toString(),
+          meta_id: meta_id.toString(),
         }),
       }
     )
