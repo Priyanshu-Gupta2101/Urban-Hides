@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import "../home.css";
 import axiosInstance from "../hooks/axiosinstance";
 import { Prices } from "../components/Prices";
+import Product from "../components/product";
 import { useRouter } from "next/navigation";
 import { Inter } from "next/font/google";
 
@@ -233,55 +234,7 @@ export default function Products() {
                         className={`grid gap-10 grid-cols-1 md:grid-cols-2 lg:grid-cols-4`}
                     >
                         {products?.map((p) => (
-                            <div
-                                className="container bg-white"
-                                key={`product-${p._id}`}
-                                onClick={() => {
-                                    router.push(`/product/${p.slug}`);
-                                }}
-                            >
-                                <div className="relative">
-                                    {isNewProduct(p.createdAt) && (
-                                        <span
-                                            className="bg-[rgba(0,0,0,0)] text-black font-bold text-xs absolute top-2 left-2 px-1 py-1 rounded-full border border-black border-opacity-25 backdrop-blur-md"
-                                            style={{ zIndex: 2 }}
-                                        >
-                                            New
-                                        </span>
-                                    )}
-                                    <div className="best-seller">
-                                        <div className="flex flex-col items-center py-4">
-                                            <img
-                                                className="img-fluid cursor-pointer"
-                                                src={`${process.env.NEXT_PUBLIC_CLOUDINARY_PATH}/${p.photo[0].public_id}.jpg`}
-                                                fill="true"
-                                                priority="true"
-                                                sizes="max-width"
-                                                alt={p.name}
-                                            />
-                                            <h6 className="mt-4">{p.name}</h6>
-                                            <span className="line-through text-gray-500">
-                                                {calculateDiscountedPrice(
-                                                    p.price
-                                                ).toLocaleString("en-US", {
-                                                    style: "currency",
-                                                    currency: "USD",
-                                                })}
-                                            </span>
-                                            <span className="text-green-500">
-                                                {p.price.toLocaleString(
-                                                    "en-US",
-                                                    {
-                                                        style: "currency",
-                                                        currency: "USD",
-                                                    }
-                                                )}{" "}
-                                                (20% off)
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                           <Product image={p.photo[0].public_id} key={p._id} {...p} />
                         ))}
                     </div>
                     <div className="m-2 p-3">
