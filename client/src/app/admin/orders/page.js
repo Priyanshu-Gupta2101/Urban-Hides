@@ -59,7 +59,9 @@ const Orders = () => {
                 <tr key={order._id}>
                   <td className="border-2 border-black p-2">{index + 1}</td>
                   <td className="border-2 border-black">{order._id}</td>
-                  <td className="border-2 border-black">{order.buyer.name}</td>
+                  <td className="border-2 border-black">
+                    {order?.buyer?.name}
+                  </td>
                   <td className="border-2 border-black">
                     {order.createdAt.split("T")[0]}
                   </td>
