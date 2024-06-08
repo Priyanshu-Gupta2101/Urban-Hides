@@ -250,7 +250,7 @@ const Product = () => {
                             : "N/A"}
                     </p>
                     <p className="py-2 text-2xl">Available colors</p>
-                    <div className="grid grid-cols-3 gap-y-4 py-2 md:grid-cols-4">
+                    <div className="">
                         {product.color?.map((p) => {
                             return (
                                 <button
@@ -340,7 +340,7 @@ const Product = () => {
                                 title="Add to Cart"
                             />
                         }
-                        bg="bg-green-500"
+                        bg="bg-green-700"
                         onClick={addToCart}
                     />
                 </div>

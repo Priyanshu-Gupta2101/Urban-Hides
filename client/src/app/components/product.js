@@ -34,7 +34,7 @@ const Product = (props) => {
                             router.push(`/product/${props.slug}`);
                         }}
                     >
-                        <div className="max-h-80 max-w-xs overflow-hidden">
+                        <div className="min-h-[30vh] max-h-[30vh] overflow-hidden">
                             <img
                                 className="img-fluid cursor-pointer"
                                 src={`${process.env.NEXT_PUBLIC_CLOUDINARY_PATH}/${props.photo[photo].public_id}.jpg`}
