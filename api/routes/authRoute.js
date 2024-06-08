@@ -16,6 +16,7 @@ import {
   getSingleOrderController,
   orderSetStatusController,
   getUserOrdersController,
+  validateOrderController,
 } from "../controllers/authController.js";
 import { isAdmin, requireSignIn } from "../middlewares/authMiddleware.js";
 
@@ -68,6 +69,9 @@ router.post("/send-order", requireSignIn, sendOrderController);
 
 // Send order
 router.post("/place-order", requireSignIn, sendOrderAfterPaypalController);
+
+// Send order
+router.post("/validate", requireSignIn, validateOrderController);
 
 router.get("/users", requireSignIn, isAdmin, getAllUsersController);
 
